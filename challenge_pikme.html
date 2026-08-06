@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>+1% каждый день</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800;900&family=Manrope:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#FDEEF3; --bg2:#F6E1EA; --bg3:#FFE8D8;
+    --berry:#E8447A; --berry-deep:#C81760; --lilac:#8B6FC9; --lilac-soft:#B9A3E0;
+    --peach:#E8A33D; --milk:#FFFDFB; --plum:#3A2140; --plum-soft:#6E5570;
+    --line: rgba(58,33,64,.13); --shadow: 0 8px 26px rgba(58,33,64,.10);
+    --radius:20px; --ok:#4FA89B; --bad:#E8447A; --wait:#E8A33D;
+    --font-display:'Unbounded', sans-serif; --font-body:'Manrope', sans-serif; --font-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 6% 0%, rgba(232,68,122,.09), transparent 42%),
+      radial-gradient(circle at 100% 8%, rgba(139,111,201,.10), transparent 46%),
+      radial-gradient(circle at 50% 100%, rgba(232,163,61,.08), transparent 50%),
+      linear-gradient(160deg, var(--bg1), var(--bg2) 55%, var(--bg3));
+    background-attachment:fixed;
+    color:var(--plum); font-family:var(--font-body); min-height:100vh;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:20px 16px 60px; position:relative;}
+  ::selection{background:var(--berry); color:#fff;}
+
+  /* decorative sparkles */
+  .sparkle{position:absolute; pointer-events:none; opacity:.55; font-size:20px; user-select:none;}
+  @media (prefers-reduced-motion: no-preference){
+    .sparkle{animation:twinkle 3.2s ease-in-out infinite;}
+    @keyframes twinkle{0%,100%{opacity:.25; transform:scale(.9);} 50%{opacity:.65; transform:scale(1.05);}}
+  }
+
+  h1,h2,h3{font-family:var(--font-display);}
+  .card{background:var(--milk); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid rgba(58,33,64,.07);}
+
+  /* ---------- Header ---------- */
+  .head{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:14px; margin-bottom:14px; position:relative;}
+  .head h1{font-weight:900; text-transform:uppercase; font-size:clamp(24px,5vw,38px); line-height:1.05; letter-spacing:.01em; margin:0; color:var(--plum);}
+  .head h1 span{color:var(--berry);}
+  .head .sub{font-size:13px; color:var(--plum-soft); margin-top:6px;}
+  .head-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .chip{display:flex; align-items:center; gap:8px; background:var(--milk); border:1px solid var(--line); border-radius:999px; padding:8px 14px; box-shadow:var(--shadow); font-size:12.5px; cursor:pointer; transition:transform .15s ease;}
+  .chip:hover{transform:translateY(-1px);}
+  .chip input{width:44px; border:none; background:transparent; font-family:var(--font-mono); font-weight:700; font-size:13px; text-align:center; border-bottom:2px solid var(--peach); color:var(--plum);}
+  .chip input:focus{outline:none;}
+  .status-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;}
+  .status-ok{background:var(--ok);} .status-bad{background:var(--bad);} .status-wait{background:var(--wait);}
+  .status-text{font-size:11.5px; color:var(--plum-soft);}
+
+  .onboard{background:linear-gradient(135deg, var(--berry), var(--lilac)); color:#fff; border-radius:var(--radius); padding:18px 20px; margin-bottom:16px; box-shadow:var(--shadow); display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between;}
+  .onboard p{margin:0; font-size:14px; max-width:560px; line-height:1.5;}
+  .onboard strong{text-decoration:underline;}
+
+  /* ---------- Players ---------- */
+  .players{display:flex; gap:10px; overflow-x:auto; padding:4px 2px 14px; margin-bottom:4px;}
+  .pill{display:flex; align-items:center; gap:9px; padding:8px 14px 8px 8px; border-radius:999px; border:2px solid var(--line); background:var(--milk); cursor:pointer; flex:0 0 auto; transition:transform .15s ease, border-color .15s ease; box-shadow:var(--shadow);}
+  .pill:hover{transform:translateY(-1px);}
+  .pill.active{border-color:var(--berry); background:var(--berry); color:#fff;}
+  .pill .avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:13px;color:#fff;flex:0 0 auto;}
+  .pill .meta{display:flex;flex-direction:column;line-height:1.15;}
+  .pill .meta .name{font-weight:800;font-size:13.5px;} .pill .meta .pts{font-family:var(--font-mono);font-size:11px;opacity:.8;}
+  .pill .rm{border:none;background:transparent;color:inherit;opacity:.45;cursor:pointer;font-size:15px;margin-left:2px;padding:0 2px;line-height:1;}
+  .pill .rm:hover{opacity:1;}
+  .add-player-btn{display:flex;align-items:center;gap:6px;border:2px dashed var(--lilac-soft);background:transparent;border-radius:999px;padding:8px 16px;cursor:pointer;font-family:var(--font-body);font-weight:700;font-size:13px;color:var(--plum-soft);flex:0 0 auto;}
+  .add-player-btn:hover{border-color:var(--berry);color:var(--berry);}
+
+  .mini-form{display:flex;gap:8px;align-items:center;background:var(--milk);border:1px solid var(--line);border-radius:14px;padding:10px;margin:8px 0 16px;box-shadow:var(--shadow);flex-wrap:wrap;}
+  .mini-form input[type="text"]{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-family:var(--font-body);font-size:13.5px;flex:1;min-width:140px;background:#fff;color:var(--plum);}
+  .mini-form input[type="number"]{width:64px;border:1px solid var(--line);border-radius:8px;padding:8px 8px;font-family:var(--font-mono);font-size:13.5px;background:#fff;text-align:center;color:var(--plum);}
+  .mini-form input:focus{outline:2px solid var(--berry); outline-offset:1px;}
+  .mini-form button{border:none;border-radius:8px;padding:9px 14px;font-family:var(--font-body);font-weight:800;font-size:13px;cursor:pointer;}
+  .field-hint{width:100%; font-size:11.5px; color:var(--berry-deep); font-weight:700; margin-top:-2px;}
+  .btn-primary{background:var(--berry); color:#fff;} .btn-primary:hover{background:var(--berry-deep);}
+  .btn-ghost{background:transparent; color:var(--plum-soft); border:1px solid var(--line) !important;} .btn-ghost:hover{color:var(--plum); border-color:var(--plum) !important;}
+
+  /* ---------- Tabs ---------- */
+  .tabnav{display:flex; gap:8px; background:var(--milk); border-radius:999px; padding:6px; box-shadow:var(--shadow); margin-bottom:18px; width:fit-content; max-width:100%; overflow-x:auto;}
+  .tabbtn{border:none; background:transparent; padding:9px 20px; border-radius:999px; font-family:var(--font-display); font-weight:700; font-size:12.5px; text-transform:uppercase; letter-spacing:.02em; color:var(--plum-soft); cursor:pointer; white-space:nowrap;}
+  .tabbtn.active{background:linear-gradient(135deg, var(--berry), var(--lilac)); color:#fff;}
+
+  /* ---------- Today ring ---------- */
+  .today-panel{display:flex;align-items:center;gap:20px;padding:18px 22px;box-shadow:var(--shadow);margin-bottom:20px;border:1px solid var(--line);flex-wrap:wrap;}
+  .ring-wrap{flex:0 0 auto;position:relative;width:92px;height:92px;} .ring-wrap svg{transform:rotate(-90deg);}
+  .ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring-label .n{font-family:var(--font-mono);font-weight:700;font-size:19px;color:var(--plum);} .ring-label .d{font-size:10px;color:var(--plum-soft);}
+  .today-text{flex:1;min-width:200px;} .today-text h3{margin:0 0 3px;font-size:16px;color:var(--plum);} .today-text p{margin:0;font-size:13px;color:var(--plum-soft);}
+  .celebrate{display:inline-flex;align-items:center;gap:6px;background:var(--peach);color:var(--plum);font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px;margin-top:8px;}
+  .streak-flame{font-family:var(--font-mono);font-weight:700;font-size:13px;color:var(--berry);}
+
+  /* ---------- Categories ---------- */
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-bottom:20px;}
+  .cat-card{padding:16px 16px 14px;border-left:5px solid var(--cat-color, var(--berry));}
+  .cat-card h3{margin:0 0 10px;font-size:14px;display:flex;align-items:center;gap:8px;color:var(--plum);}
+  .empty-cat{font-size:12px; color:var(--plum-soft); font-style:italic; padding:6px 0 10px;}
+  .task-row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px dashed var(--line);} .task-row:last-of-type{border-bottom:none;}
+  .task-row input[type="checkbox"]{width:17px;height:17px;accent-color:var(--cat-color, var(--berry));flex:0 0 auto;cursor:pointer;}
+  .task-row label{flex:1;font-size:13px;cursor:pointer;line-height:1.35;color:var(--plum);}
+  .task-row .pts{font-family:var(--font-mono);font-weight:700;font-size:12px;color:var(--plum-soft);flex:0 0 auto;}
+  .task-row .del{border:none;background:none;color:var(--plum-soft);opacity:.55;cursor:pointer;font-size:14px;} .task-row .del:hover{opacity:1;color:var(--berry);}
+  .add-task-toggle{margin-top:8px;border:none;background:none;color:var(--berry-deep);font-size:12px;font-weight:800;cursor:pointer;padding:0;} .add-task-toggle:hover{text-decoration:underline;}
+
+  /* ---------- Anti-procrastination ---------- */
+  .antiproc{background:linear-gradient(135deg, rgba(232,68,122,.10), rgba(139,111,201,.06));border:1px solid rgba(232,68,122,.3);border-radius:var(--radius);padding:18px 20px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
+  .antiproc .tag{font-family:var(--font-display);font-size:11.5px;text-transform:uppercase;color:var(--berry-deep);background:#fff;border:1px solid rgba(232,68,122,.35);padding:4px 10px;border-radius:999px;flex:0 0 auto;}
+  .antiproc input[type="text"]{flex:1;min-width:180px;border:none;border-bottom:2px solid rgba(232,68,122,.35);background:transparent;padding:6px 2px;font-size:14px;font-family:var(--font-body);color:var(--plum);}
+  .antiproc input[type="text"]:focus{outline:none;border-bottom-color:var(--berry);}
+  .antiproc .toggle-btn{border:2px solid var(--berry);background:#fff;color:var(--berry);font-weight:800;font-size:12.5px;padding:8px 16px;border-radius:999px;cursor:pointer;flex:0 0 auto;}
+  .antiproc .toggle-btn.done{background:var(--berry);color:#fff;}
+
+  /* ---------- Weekly ---------- */
+  .weekly{padding:18px 20px;margin-bottom:20px;}
+  .weekly h2{display:flex;align-items:center;gap:8px; font-size:15px; margin:0 0 4px; color:var(--plum);}
+  .weekly .cap{font-size:12px;color:var(--plum-soft);margin-bottom:12px;}
+  .w-row{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px dashed var(--line);} .w-row:last-of-type{border-bottom:none;}
+  .w-row input[type="checkbox"]{width:17px;height:17px;accent-color:var(--lilac);cursor:pointer;} .w-row label{flex:1;font-size:13px;color:var(--plum);}
+  .w-row .pts{font-family:var(--font-mono);font-weight:700;font-size:11.5px;color:var(--plum-soft);}
+  .w-row .del{border:none;background:none;color:var(--plum-soft);opacity:.55;cursor:pointer;font-size:14px;} .w-row .del:hover{opacity:1;color:var(--berry);}
+  .weekly-total{font-size:12px; color:var(--lilac); font-weight:700; margin-top:8px;}
+  .empty-block{font-size:12.5px; color:var(--plum-soft); font-style:italic; padding:4px 0 10px;}
+
+  /* ---------- Progress tab ---------- */
+  .filter-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;}
+  .seg{display:flex; background:var(--milk); border-radius:999px; padding:4px; box-shadow:var(--shadow); gap:2px;}
+  .seg button{border:none; background:transparent; padding:7px 14px; border-radius:999px; font-size:12px; font-weight:700; color:var(--plum-soft); cursor:pointer; white-space:nowrap;}
+  .seg button.active{background:var(--lilac); color:#fff;}
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:20px;}
+  .stat-card{padding:14px 16px;}
+  .stat-card .val{font-family:var(--font-mono); font-weight:700; font-size:22px; color:var(--berry-deep);}
+  .stat-card .lbl{font-size:11.5px; color:var(--plum-soft); margin-top:2px; line-height:1.3;}
+  .chart-card{padding:18px 20px; margin-bottom:18px;}
+  .chart-card h3{font-size:14px; margin:0 0 4px; color:var(--plum);}
+  .chart-card .cap{font-size:11.5px; color:var(--plum-soft); margin-bottom:12px;}
+  .empty-state{text-align:center; padding:40px 20px; color:var(--plum-soft); font-size:13.5px;}
+  .cat-bar-row{display:flex; align-items:center; gap:10px; padding:6px 0;}
+  .cat-bar-name{width:130px; font-size:12px; color:var(--plum); flex:0 0 auto;}
+  .cat-bar-bg{flex:1; height:10px; background:var(--bg1); border-radius:99px; overflow:hidden;}
+  .cat-bar-fill{height:100%; border-radius:99px;}
+  .cat-bar-val{width:34px; text-align:right; font-family:var(--font-mono); font-size:11.5px; color:var(--plum-soft); flex:0 0 auto;}
+
+  /* ---------- Game tab ---------- */
+  .game-status{padding:16px 20px; margin-bottom:16px; display:flex; flex-wrap:wrap; gap:18px;}
+  .game-status .gs-item{font-size:12.5px; color:var(--plum-soft);}
+  .game-status .gs-item b{color:var(--plum); font-family:var(--font-mono);}
+  .board-card{padding:20px; margin-bottom:20px; position:relative; overflow:hidden;}
+  .board-card h2{font-size:15px;text-transform:uppercase;margin:0 0 4px;letter-spacing:.03em; color:var(--plum);}
+  .board-card .cap{font-size:12px;color:var(--plum-soft);margin-bottom:14px;}
+  .board-deco{position:absolute; font-size:26px; opacity:.12; pointer-events:none;}
+  .game-row{display:flex;gap:5px;margin-bottom:5px;} .game-row.rev{flex-direction:row-reverse;}
+  .gcell{flex:1;aspect-ratio:1/1;min-width:0;border-radius:10px;border:1.5px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;position:relative;background:#fff;padding-bottom:2px;}
+  .gcell .idx{position:absolute; top:2px; left:4px; font-family:var(--font-mono); font-size:7.5px; color:var(--plum-soft); opacity:.6;}
+  .gcell.reward{border-color:var(--peach); background:linear-gradient(160deg,#fff,rgba(232,163,61,.14)); box-shadow:0 0 0 2px rgba(232,163,61,.25) inset;}
+  .gcell.start{border-color:var(--lilac);}
+  .gcell.finish{border-color:var(--berry); background:linear-gradient(160deg,#fff,rgba(232,68,122,.16));}
+  .gcell .reward-icon{font-size:clamp(9px,2.2vw,15px);}
+  .gcell .tokens{display:flex; gap:1px; position:absolute; bottom:2px; left:50%; transform:translateX(-50%);}
+  .token{width:13px;height:13px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;color:#fff;font-family:var(--font-display);border:1.5px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.25);}
+  @media (prefers-reduced-motion: no-preference){ .token{transition:all .5s ease;} }
+  .game-legend{margin-top:12px; font-size:11.5px; color:var(--plum-soft); display:flex; gap:16px; flex-wrap:wrap; align-items:center;}
+  .game-legend .lg-item{display:flex; align-items:center; gap:5px;}
+  .lg-dot{width:9px;height:9px;border-radius:50%;}
+  .reward-list{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+  .reward-chip{font-size:11px; background:var(--bg3); border-radius:999px; padding:5px 10px; color:var(--plum);}
+  .reward-chip.reached{background:var(--peach); color:#fff; font-weight:700;}
+  .puff{background:var(--peach); color:var(--plum); font-weight:800; font-size:13px; padding:10px 16px; border-radius:14px; margin-bottom:14px; text-align:center;}
+
+  .rules{font-size:12px;color:var(--plum-soft);line-height:1.7;padding:14px 18px;margin-bottom:16px;}
+  .rules b{color:var(--plum);}
+  .footer-note{text-align:center;font-size:11.5px;color:var(--plum-soft);margin-top:10px;}
+  .banner-err{background:#fff0f4; border:1px solid rgba(232,68,122,.35); color:var(--berry-deep); font-size:12.5px; font-weight:700; padding:10px 16px; border-radius:12px; margin-bottom:16px;}
+
+  @media (max-width: 620px){
+    .today-panel{flex-direction:column;align-items:flex-start;}
+    .cat-grid{grid-template-columns:1fr;}
+    .cat-bar-name{width:92px; font-size:11px;}
+  }
+  :focus-visible{outline:2px solid var(--berry);outline-offset:2px;}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">Загрузка…</div>
+
+<script>
+(function(){
+  /* ======================================================================
+     CONFIG — легко настраиваемые константы
+  ====================================================================== */
+  var MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  var PLAYER_COLORS = ['#E8447A','#8B6FC9','#E8A33D','#4FA89B','#D6478B','#6F7FD8','#F2799E','#3A2140'];
+
+  var CATEGORY_META = {
+    career:  {label:'Карьера',        emoji:'💼', color:'#8B6FC9'},
+    english: {label:'Английский',     emoji:'🇬🇧', color:'#6F7FD8'},
+    growth:  {label:'Развитие',       emoji:'📚', color:'#E8A33D'},
+    mind:    {label:'Мышление',       emoji:'🧠', color:'#6E5570'},
+    health:  {label:'Здоровье',       emoji:'🏃', color:'#4FA89B'},
+    hse:     {label:'Учёба во ВШЭ',   emoji:'🎓', color:'#7C5CBF'},
+    masha:   {label:'Маша',           emoji:'🌸', color:'#F2799E'},
+    katya:   {label:'Катя',           emoji:'🎀', color:'#D6478B'}
+  };
+  var CATEGORY_ORDER = ['career','english','growth','mind','health','hse','masha','katya'];
+
+  /* IDs, которые были встроены "по умолчанию" в старых версиях приложения —
+     нужны только для миграции, чтобы вычистить их при обновлении */
+  var LEGACY_DEFAULT_TASK_IDS = ['c1','c2','c3','c4','c5','e1','e2','e3','e4','g1','g2','g3','m1','m2','m3','h1','h2','h3','h4','h5','p1','p2','p3'];
+  var LEGACY_DEFAULT_WEEKLY_IDS = ['w1','w2','w3','w4','w5','w6'];
+
+  /* Клетки-награды игровой доски. cell — индекс клетки (с 0), можно свободно менять. */
+  var REWARDS = [
+    {cell:4,  icon:'🎁', label:'Маленькая радость'},
+    {cell:9,  icon:'☕', label:'Кофе или десерт'},
+    {cell:19, icon:'😌', label:'Вечер без чувства вины'},
+    {cell:29, icon:'💅', label:'Свидание с собой'},
+    {cell:39, icon:'🚶‍♀️', label:'Совместная прогулка'},
+    {cell:49, icon:'🏆', label:'Большой приз'}
+  ];
+
+  var DATA_VERSION = 2;
+
+  /* ======================================================================
+     STATE
+  ====================================================================== */
+  function defaultState(){
+    return {
+      version: DATA_VERSION,
+      participants: [],
+      tasks: [],
+      weeklyChallenges: [],
+      entries: {},
+      weeklyProgress: {},
+      settings: { dailyGoal: 8, pointsPerCell: 5, numberOfCells: 50 }
+    };
+  }
+
+  /* Безопасно превращает состояние ЛЮБОЙ прошлой версии в текущее.
+     Ничего не роняет, даже если структура неполная. */
+  function migrateState(raw){
+    if(!raw || typeof raw !== 'object') return defaultState();
+    var s = defaultState();
+    try{
+      s.participants = Array.isArray(raw.participants) ? raw.participants.filter(function(p){return p && p.id && p.name;}) : [];
+      s.tasks = Array.isArray(raw.tasks) ? raw.tasks.slice() : [];
+      s.weeklyChallenges = Array.isArray(raw.weeklyChallenges) ? raw.weeklyChallenges.slice() : [];
+      s.entries = (raw.entries && typeof raw.entries==='object') ? raw.entries : {};
+      s.weeklyProgress = (raw.weeklyProgress && typeof raw.weeklyProgress==='object') ? raw.weeklyProgress : {};
+      s.settings = (raw.settings && typeof raw.settings==='object') ? raw.settings : {};
+      if(!s.settings.dailyGoal) s.settings.dailyGoal = 8;
+      if(!s.settings.pointsPerCell) s.settings.pointsPerCell = 5;
+      if(!s.settings.numberOfCells) s.settings.numberOfCells = 50;
+
+      // старая категория "projects" -> "hse"
+      s.tasks.forEach(function(t){ if(t && t.category==='projects') t.category='hse'; });
+
+      // удаляем встроенные задачи прошлых версий (пользовательские остаются)
+      s.tasks = s.tasks.filter(function(t){ return t && t.id && LEGACY_DEFAULT_TASK_IDS.indexOf(t.id) === -1; });
+      s.weeklyChallenges = s.weeklyChallenges.filter(function(c){ return c && c.id && LEGACY_DEFAULT_WEEKLY_IDS.indexOf(c.id) === -1; });
+
+      // задачи без известной категории — в "growth", чтобы не потерялись
+      s.tasks.forEach(function(t){ if(!CATEGORY_META[t.category]) t.category='growth'; });
+      // у всех челленджей должно быть поле points
+      s.weeklyChallenges.forEach(function(c){ if(!c.points || c.points<1) c.points = 2; });
+
+      var validTaskIds = {}; s.tasks.forEach(function(t){ validTaskIds[t.id]=true; });
+      var validChallengeIds = {}; s.weeklyChallenges.forEach(function(c){ validChallengeIds[c.id]=true; });
+
+      // чистим ссылки на удалённые задачи в entries
+      Object.keys(s.entries).forEach(function(dateKeyStr){
+        var dayObj = s.entries[dateKeyStr];
+        if(!dayObj || typeof dayObj!=='object') { delete s.entries[dateKeyStr]; return; }
+        Object.keys(dayObj).forEach(function(pid){
+          var e = dayObj[pid];
+          if(!e || typeof e!=='object'){ delete dayObj[pid]; return; }
+          e.done = Array.isArray(e.done) ? e.done.filter(function(tid){ return validTaskIds[tid]; }) : [];
+          e.antiDone = !!e.antiDone;
+          e.antiText = typeof e.antiText==='string' ? e.antiText : '';
+        });
+      });
+
+      // чистим ссылки на удалённые челленджи в weeklyProgress
+      Object.keys(s.weeklyProgress).forEach(function(wn){
+        var wk = s.weeklyProgress[wn];
+        if(!wk || typeof wk!=='object'){ delete s.weeklyProgress[wn]; return; }
+        Object.keys(wk).forEach(function(pid){
+          var m = wk[pid]; if(!m || typeof m!=='object'){ delete wk[pid]; return; }
+          Object.keys(m).forEach(function(cid){ if(!validChallengeIds[cid]) delete m[cid]; });
+        });
+      });
+
+      s.version = DATA_VERSION;
+    }catch(e){
+      console.error('migrateState error, falling back to safe defaults for broken parts', e);
+    }
+    return s;
+  }
+
+  /* ======================================================================
+     HELPERS
+  ====================================================================== */
+  function uid(p){ return p+'_'+Math.random().toString(36).slice(2,9); }
+  function pad(n){ return n<10?'0'+n:''+n; }
+  function dateKey(d){ return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+  function parseDateKey(k){ var parts=k.split('-').map(Number); return new Date(parts[0], parts[1]-1, parts[2]); }
+  function todayDate(){ return new Date(); }
+  function todayKey(){ return dateKey(todayDate()); }
+  function formatShort(d){ return pad(d.getDate())+'.'+pad(d.getMonth()+1); }
+  function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function clampInt(v, min, max, dflt){ var n=parseInt(v,10); if(isNaN(n)) return dflt; return Math.max(min, Math.min(max, n)); }
+
+  /* ======================================================================
+     STORAGE — window.storage с резервом на localStorage
+  ====================================================================== */
+  var LS_KEY = 'gaffari-challenge-v2';
+  var storageErrorLogged = false;
+  var syncStatus = 'wait'; // 'synced' | 'local' | 'error' | 'wait'
+  var lastLocalChangeAt = 0;
+  var remoteAvailable = (typeof window.storage !== 'undefined' && window.storage);
+
+  function saveLocal(data){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify({v:DATA_VERSION, data:data})); return true; }
+    catch(e){ return false; }
+  }
+  function loadLocal(){
+    try{
+      var raw = localStorage.getItem(LS_KEY);
+      if(!raw) return null;
+      var parsed = JSON.parse(raw);
+      return parsed && parsed.data ? parsed.data : null;
+    }catch(e){ return null; }
+  }
+  async function tryRemoteSave(data){
+    if(!remoteAvailable) return false;
+    try{
+      var res = await window.storage.set('app-data', JSON.stringify(data), true);
+      return !!res;
+    }catch(e){
+      if(!storageErrorLogged){ console.error('window.storage сохранение недоступно, переключаюсь на localStorage', e); storageErrorLogged = true; }
+      return false;
+    }
+  }
+  async function tryRemoteLoad(){
+    if(!remoteAvailable) return null;
+    try{
+      var res = await window.storage.get('app-data', true);
+      return res ? JSON.parse(res.value) : null;
+    }catch(e){
+      if(!storageErrorLogged){ console.error('window.storage загрузка недоступна, переключаюсь на localStorage', e); storageErrorLogged = true; }
+      return null;
+    }
+  }
+
+  var saving = false, pendingSave = false;
+  async function persist(){
+    lastLocalChangeAt = Date.now();
+    saveLocal(state);
+    if(saving){ pendingSave = true; return; }
+    saving = true;
+    var ok = await tryRemoteSave(state);
+    syncStatus = ok ? 'synced' : (remoteAvailable ? 'error' : 'local');
+    saving = false;
+    if(pendingSave){ pendingSave = false; persist(); }
+    updateStatusBadge();
+  }
+
+  function updateStatusBadge(){
+    var dot = document.getElementById('sync-dot'); var txt = document.getElementById('sync-text');
+    if(!dot || !txt) return;
+    var map = {
+      synced: ['status-ok','Данные синхронизированы'],
+      local:  ['status-wait','Сохранено только на этом устройстве'],
+      error:  ['status-bad','Не удалось сохранить изменения'],
+      wait:   ['status-wait','Проверяем соединение…']
+    };
+    var m = map[syncStatus] || map.wait;
+    dot.className = 'status-dot ' + m[0];
+    txt.textContent = m[1];
+  }
+
+  /* ======================================================================
+     APP STATE
+  ====================================================================== */
+  var state = defaultState();
+  var myId = null;
+  var ui = {
+    activeTab: (function(){ try{ return localStorage.getItem('gaffari-active-tab') || 'tasks'; }catch(e){ return 'tasks'; } })(),
+    showAddPlayer:false, playerFormError:'',
+    openAddTaskCat:null, taskFormError:'',
+    showAddWeekly:false, weeklyFormError:'',
+    progressPeriod:'7d', progressParticipant:'all',
+    gamePeriod:'month',
+    rewardPuff:null
+  };
+
+  function setActiveTab(tab){ ui.activeTab = tab; try{ localStorage.setItem('gaffari-active-tab', tab); }catch(e){} render(); }
+
+  function ensureEntry(dstr, pid){ if(!state.entries[dstr]) state.entries[dstr]={}; if(!state.entries[dstr][pid]) state.entries[dstr][pid]={done:[],antiDone:false,antiText:''}; return state.entries[dstr][pid]; }
+  function readEntry(dstr,pid){ var e=state.entries[dstr]&&state.entries[dstr][pid]; return e || {done:[],antiDone:false,antiText:''}; }
+  function taskById(id){ return state.tasks.find(function(t){return t.id===id;}); }
+  function challengeById(id){ return state.weeklyChallenges.find(function(c){return c.id===id;}); }
+
+  function computeDayTotal(pid,dstr){
+    var e=state.entries[dstr]&&state.entries[dstr][pid]; if(!e) return 0;
+    var total=0; (e.done||[]).forEach(function(tid){var t=taskById(tid); if(t) total+=t.points;});
+    if(e.antiDone) total+=2;
+    return total;
+  }
+  function goal(){ return state.settings.dailyGoal||8; }
+  function pointsPerCell(){ return state.settings.pointsPerCell||5; }
+  function numberOfCells(){ return state.settings.numberOfCells||50; }
+
+  function computeStreak(pid){
+    var streak=0; var d=todayDate();
+    if(computeDayTotal(pid,dateKey(d))>=goal()){streak++;}
+    d.setDate(d.getDate()-1);
+    while(true){ var k=dateKey(d); if(computeDayTotal(pid,k)>=goal()){streak++; d.setDate(d.getDate()-1);} else break; if(streak>500) break; }
+    return streak;
+  }
+  function computeBestStreak(pid){
+    var keys = Object.keys(state.entries).filter(function(k){ return state.entries[k][pid]; }).sort(function(a,b){ return parseDateKey(a)-parseDateKey(b); });
+    if(keys.length===0) return 0;
+    var best=0, cur=0, prevDate=null;
+    keys.forEach(function(k){
+      var d = parseDateKey(k);
+      var met = computeDayTotal(pid,k) >= goal();
+      if(met){
+        if(prevDate && (d - prevDate) === 86400000){ cur++; } else { cur=1; }
+        best = Math.max(best,cur);
+      } else { cur=0; }
+      prevDate = d;
+    });
+    return best;
+  }
+  function computeMonthTotal(pid){
+    var d=todayDate(); var prefix=d.getFullYear()+'-'+(d.getMonth()+1)+'-'; var total=0;
+    Object.keys(state.entries).forEach(function(k){ if(k.indexOf(prefix)===0) total+=computeDayTotal(pid,k); });
+    return total;
+  }
+  function activePlayer(){ return state.participants.find(function(p){return p.id===myId;}); }
+  function pickColor(){ var used=state.participants.map(function(p){return p.color;}); for(var i=0;i<PLAYER_COLORS.length;i++){ if(used.indexOf(PLAYER_COLORS[i])===-1) return PLAYER_COLORS[i]; } return PLAYER_COLORS[state.participants.length % PLAYER_COLORS.length]; }
+
+  /* period date lists for charts / stats / game positions */
+  function periodDates(period){
+    var d = todayDate(); var arr = [];
+    if(period==='7d' || period==='week'){
+      for(var i=6;i>=0;i--){ var dd=new Date(d); dd.setDate(d.getDate()-i); arr.push(dd); }
+    } else if(period==='month'){
+      for(var day=1; day<=d.getDate(); day++){ arr.push(new Date(d.getFullYear(), d.getMonth(), day)); }
+    } else {
+      var allKeys = Object.keys(state.entries);
+      if(allKeys.length===0){ arr.push(d); }
+      else{
+        var dates = allKeys.map(parseDateKey);
+        var minD = new Date(Math.min.apply(null, dates.map(function(x){return x.getTime();})));
+        var cur = new Date(minD.getFullYear(), minD.getMonth(), minD.getDate());
+        while(cur <= d){ arr.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
+      }
+    }
+    return arr;
+  }
+  function periodTotalForParticipant(pid, dates){
+    var total=0; dates.forEach(function(d){ total += computeDayTotal(pid, dateKey(d)); }); return total;
+  }
+  function periodTotalCombined(dates){
+    var total=0; state.participants.forEach(function(p){ total += periodTotalForParticipant(p.id, dates); }); return total;
+  }
+  function categoryTotals(pidOrNull, dates){
+    var totals={}; CATEGORY_ORDER.forEach(function(c){totals[c]=0;});
+    var pids = pidOrNull ? [pidOrNull] : state.participants.map(function(p){return p.id;});
+    dates.forEach(function(d){
+      var k = dateKey(d);
+      pids.forEach(function(pid){
+        var e = state.entries[k] && state.entries[k][pid];
+        if(e){ (e.done||[]).forEach(function(tid){ var t=taskById(tid); if(t && totals.hasOwnProperty(t.category)) totals[t.category]+=t.points; }); }
+      });
+    });
+    return totals;
+  }
+
+  function gamePosition(pid, period){
+    var dates = periodDates(period);
+    var total = periodTotalForParticipant(pid, dates);
+    var n = numberOfCells();
+    return Math.min(Math.floor(total/pointsPerCell()), n-1);
+  }
+
+  /* ======================================================================
+     RENDER — root
+  ====================================================================== */
+  function render(){
+    var html = '';
+    html += renderSparkles();
+    html += renderHeader();
+    if(syncStatus==='error'){ html += '<div class="banner-err">⚠️ Не получилось сохранить последние изменения на сервере. Они остаются локально в этом браузере — не закрывайте вкладку без проверки соединения.</div>'; }
+    html += renderInviteAndOnboard();
+    html += renderPlayers();
+    html += renderTabNav();
+
+    if(ui.activeTab==='tasks') html += renderTasksTab();
+    else if(ui.activeTab==='progress') html += renderProgressTab();
+    else html += renderGameTab();
+
+    document.getElementById('app').innerHTML = html;
+    updateStatusBadge();
+    var importInput = document.getElementById('import-file');
+    if(importInput) importInput.addEventListener('change', onImportFile);
+  }
+
+  function renderSparkles(){
+    return '<span class="sparkle" style="top:2px; right:8%;">✨</span>'+
+           '<span class="sparkle" style="top:40px; right:26%;">💫</span>'+
+           '<span class="sparkle" style="top:6px; left:4%;">🌸</span>';
+  }
+
+  function renderHeader(){
+    var d = todayDate(); var monthName = MONTHS[d.getMonth()]; var daysLeft = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate() - d.getDate();
+    var html = '<div class="head">';
+    html += '<div><h1>'+monthName.toUpperCase()+': <span>+1%</span> каждый день</h1>';
+    html += '<div class="sub">Сегодня '+d.getDate()+' '+monthName.toLowerCase()+' · до конца месяца осталось '+daysLeft+' дн.</div></div>';
+    html += '<div class="head-right">';
+    html += '<div class="chip"><span id="sync-dot" class="status-dot"></span><span id="sync-text" class="status-text"></span></div>';
+    html += '<div class="chip">🎯 <input type="number" min="1" max="30" value="'+goal()+'" data-field="daily-goal"> баллов/день</div>';
+    html += '<div class="chip" data-action="refresh-now">⟳ Обновить</div>';
+    html += '</div></div>';
+    return html;
+  }
+
+  function renderInviteAndOnboard(){
+    var html = '';
+    if(state.participants.length===0){
+      html += '<div class="onboard"><p>Добавьте <strong>себя и подругу</strong> как игроков — тогда счётчики, доска и прогресс заработают.</p></div>';
+    } else if(!myId){
+      html += '<div class="onboard"><p>Выберите, <strong>кто вы</strong>, нажав на свою карточку ниже.</p></div>';
+    }
+    return html;
+  }
+
+  function renderPlayers(){
+    var tk = todayKey();
+    var html = '<div class="players">';
+    state.participants.forEach(function(p){
+      var pts = computeDayTotal(p.id, tk);
+      html += '<div class="pill'+(p.id===myId?' active':'')+'" data-action="select-player" data-id="'+p.id+'">';
+      html += '<div class="avatar" style="background:'+p.color+'">'+escapeHtml(p.name.charAt(0).toUpperCase())+'</div>';
+      html += '<div class="meta"><span class="name">'+escapeHtml(p.name)+'</span><span class="pts">'+pts+'/'+goal()+' сегодня</span></div>';
+      html += '<button class="rm" data-action="remove-player" data-id="'+p.id+'" title="Удалить">×</button></div>';
+    });
+    html += '<button class="add-player-btn" data-action="show-add-player">+ Добавить игрока</button></div>';
+    if(ui.showAddPlayer){
+      html += '<div class="mini-form"><input type="text" id="new-player-name" data-role="player-name-input" placeholder="Имя игрока">';
+      html += '<button class="btn-primary" data-action="confirm-add-player">Добавить</button>';
+      html += '<button class="btn-ghost" data-action="cancel-add-player">Отмена</button>';
+      if(ui.playerFormError){ html += '<div class="field-hint">'+escapeHtml(ui.playerFormError)+'</div>'; }
+      html += '</div>';
+    }
+    return html;
+  }
+
+  function renderTabNav(){
+    var tabs = [['tasks','📝 Задачи'],['progress','📊 Прогресс'],['game','🎲 Игра']];
+    var html = '<div class="tabnav">';
+    tabs.forEach(function(t){ html += '<button class="tabbtn'+(ui.activeTab===t[0]?' active':'')+'" data-action="switch-tab" data-tab="'+t[0]+'">'+t[1]+'</button>'; });
+    html += '</div>';
+    return html;
+  }
+
+  /* ======================================================================
+     TAB 1 — ЗАДАЧИ
+  ====================================================================== */
+  function renderTasksTab(){
+    var tk = todayKey(); var ap = activePlayer();
+    var html = '';
+
+    var todayTotal = ap?computeDayTotal(ap.id,tk):0; var pct=Math.min(1, todayTotal/goal());
+    var R=40, C=2*Math.PI*R; var dash=(pct*C).toFixed(1)+' '+C.toFixed(1); var met = ap && todayTotal>=goal();
+    html += '<div class="today-panel card"><div class="ring-wrap"><svg width="92" height="92" viewBox="0 0 92 92">';
+    html += '<circle cx="46" cy="46" r="'+R+'" fill="none" stroke="var(--bg2)" stroke-width="9"/>';
+    html += '<circle cx="46" cy="46" r="'+R+'" fill="none" stroke="'+(met?'var(--peach)':'var(--berry)')+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+dash+'"/></svg>';
+    html += '<div class="ring-label"><span class="n">'+todayTotal+'</span><span class="d">из '+goal()+'</span></div></div>';
+    html += '<div class="today-text">';
+    if(ap){
+      html += '<h3>'+escapeHtml(ap.name)+', сегодня '+todayTotal+' балл(ов)</h3>';
+      html += '<p>Серия дней подряд: <span class="streak-flame">🔥×'+computeStreak(ap.id)+'</span> · всего за '+MONTHS[todayDate().getMonth()].toLowerCase()+': <b>'+computeMonthTotal(ap.id)+'</b></p>';
+      if(met){ html += '<div class="celebrate">🎉 Цель дня выполнена!</div>'; }
+    } else { html += '<h3>Кто вы сегодня?</h3><p>Выберите себя в списке игроков выше.</p>'; }
+    html += '</div></div>';
+
+    html += '<div class="cat-grid">';
+    CATEGORY_ORDER.forEach(function(cat){ html += renderCategory(cat, tk, ap); });
+    html += '</div>';
+
+    var antiE = ap ? readEntry(tk, ap.id) : null;
+    html += '<div class="antiproc"><span class="tag">Анти-прокрастинация</span>';
+    html += '<input type="text" data-field="antiproc-text" placeholder="Какое неприятное дело сделаете сегодня?" value="'+escapeHtml(antiE?antiE.antiText||'':'')+'" '+(ap?'':'disabled')+'>';
+    html += '<button class="toggle-btn'+(antiE&&antiE.antiDone?' done':'')+'" data-action="toggle-antiproc" '+(ap?'':'disabled')+'>'+(antiE&&antiE.antiDone?'✓ Сделано (+2)':'Отметить сделанным (+2)')+'</button></div>';
+
+    html += renderWeekly(ap);
+
+    html += '<div class="rules card"><b>Правила игры.</b> День засчитан при '+goal()+'+ баллах. Не пропускайте 2 дня подряд.<br>🔥 7 дней подряд — маленькая награда · 14 дней — свидание с собой · 31 день — большой приз.</div>';
+
+    html += '<div class="backup-row" style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;">';
+    html += '<button class="btn-ghost" style="border-radius:999px;padding:8px 16px;" data-action="export-json">💾 Скачать резервную копию</button>';
+    html += '<label class="btn-ghost" style="border-radius:999px;padding:8px 16px;cursor:pointer;display:inline-block;">📂 Загрузить резервную копию<input type="file" id="import-file" accept="application/json" style="display:none;"></label>';
+    html += '</div>';
+
+    html += '<div class="footer-note">Категории «Маша» и «Катя» — общие блоки задач для вас обеих; отметка о выполнении сохраняется отдельно для каждой из вас.</div>';
+    return html;
+  }
+
+  function renderCategory(cat, tk, ap){
+    var meta=CATEGORY_META[cat]; var tasks=state.tasks.filter(function(t){return t.category===cat;});
+    var entry = ap ? readEntry(tk, ap.id) : {done:[]};
+    var html='<div class="cat-card card" style="--cat-color:'+meta.color+'"><h3>'+meta.emoji+' '+meta.label+'</h3>';
+    if(tasks.length===0){ html += '<div class="empty-cat">Пока нет задач — добавьте первую 👇</div>'; }
+    tasks.forEach(function(t){
+      var checked = entry.done.indexOf(t.id)>-1;
+      html+='<div class="task-row"><input type="checkbox" id="chk-'+t.id+'" '+(checked?'checked':'')+' '+(ap?'':'disabled')+' data-action="toggle-task" data-task="'+t.id+'">';
+      html+='<label for="chk-'+t.id+'">'+escapeHtml(t.name)+'</label><span class="pts">+'+t.points+'</span>';
+      html+='<button class="del" data-action="delete-task" data-task="'+t.id+'" data-name="'+escapeHtml(t.name)+'" title="Удалить">×</button></div>';
+    });
+    if(ui.openAddTaskCat===cat){
+      html+='<div class="mini-form" style="margin-top:8px;"><input type="text" id="new-task-name-'+cat+'" data-role="task-name-input" data-category="'+cat+'" placeholder="Новая задача">';
+      html+='<input type="number" id="new-task-points-'+cat+'" data-role="task-points-input" data-category="'+cat+'" value="2" min="1" max="20">';
+      html+='<button class="btn-primary" data-action="confirm-add-task" data-category="'+cat+'">Ок</button>';
+      html+='<button class="btn-ghost" data-action="cancel-add-task">Отмена</button>';
+      if(ui.taskFormError){ html += '<div class="field-hint">'+escapeHtml(ui.taskFormError)+'</div>'; }
+      html+='</div>';
+    } else {
+      html+='<button class="add-task-toggle" data-action="toggle-add-task-form" data-category="'+cat+'">+ Добавить задачу</button>';
+    }
+    html+='</div>'; return html;
+  }
+
+  function renderWeekly(ap){
+    var wn = Math.ceil(todayDate().getDate()/7);
+    var prog=(state.weeklyProgress[wn] && ap && state.weeklyProgress[wn][ap.id]) || {};
+    var html='<div class="weekly card"><h2>🎯 Челленджи недели '+wn+'</h2><div class="cap">Общие цели на неделю — сбрасываются каждую новую неделю месяца. Баллы за них считаются отдельно и не влияют на дневную цель.</div>';
+    if(state.weeklyChallenges.length===0){ html += '<div class="empty-block">Пока нет челленджей недели — добавьте первый 👇</div>'; }
+    var earned = 0;
+    state.weeklyChallenges.forEach(function(ch){
+      var checked=!!prog[ch.id]; if(checked) earned += (ch.points||2);
+      html+='<div class="w-row"><input type="checkbox" id="wchk-'+ch.id+'" '+(checked?'checked':'')+' '+(ap?'':'disabled')+' data-action="toggle-weekly" data-challenge="'+ch.id+'">';
+      html+='<label for="wchk-'+ch.id+'">'+escapeHtml(ch.name)+'</label><span class="pts">+'+(ch.points||2)+'</span>';
+      html+='<button class="del" data-action="delete-weekly" data-challenge="'+ch.id+'" data-name="'+escapeHtml(ch.name)+'" title="Удалить">×</button></div>';
+    });
+    if(ap && state.weeklyChallenges.length>0){ html += '<div class="weekly-total">Баллы за челленджи недели: '+earned+'</div>'; }
+    if(ui.showAddWeekly){
+      html+='<div class="mini-form" style="margin-top:8px;"><input type="text" id="new-weekly-name" data-role="weekly-name-input" placeholder="Новый челлендж недели">';
+      html+='<input type="number" id="new-weekly-points" data-role="weekly-points-input" value="2" min="1" max="20">';
+      html+='<button class="btn-primary" data-action="confirm-add-weekly">Ок</button><button class="btn-ghost" data-action="cancel-add-weekly">Отмена</button>';
+      if(ui.weeklyFormError){ html += '<div class="field-hint">'+escapeHtml(ui.weeklyFormError)+'</div>'; }
+      html+='</div>';
+    } else { html+='<button class="add-task-toggle" data-action="toggle-add-weekly-form">+ Добавить челлендж</button>'; }
+    html+='</div>'; return html;
+  }
+
+  /* ======================================================================
+     TAB 2 — ПРОГРЕСС
+  ====================================================================== */
+  function renderProgressTab(){
+    if(state.participants.length===0){
+      return '<div class="onboard"><p>Добавьте <strong>игроков</strong> во вкладке «Задачи», чтобы здесь появилась статистика.</p></div>';
+    }
+    var html = '<div class="filter-row">';
+    html += '<div class="seg">';
+    [['7d','7 дней'],['month','Текущий месяц'],['all','Всё время']].forEach(function(o){
+      html += '<button class="'+(ui.progressPeriod===o[0]?'active':'')+'" data-action="set-progress-period" data-period="'+o[0]+'">'+o[1]+'</button>';
+    });
+    html += '</div><div class="seg">';
+    html += '<button class="'+(ui.progressParticipant==='all'?'active':'')+'" data-action="set-progress-participant" data-pid="all">Общий результат</button>';
+    state.participants.forEach(function(p){ html += '<button class="'+(ui.progressParticipant===p.id?'active':'')+'" data-action="set-progress-participant" data-pid="'+p.id+'">'+escapeHtml(p.name)+'</button>'; });
+    html += '</div></div>';
+
+    var dates = periodDates(ui.progressPeriod);
+    var pidFilter = ui.progressParticipant==='all' ? null : ui.progressParticipant;
+    var hasData = Object.keys(state.entries).length>0;
+
+    if(!hasData){
+      html += '<div class="card empty-state">Пока недостаточно данных. Отметьте несколько задач, и здесь появятся графики ✨</div>';
+      return html;
+    }
+
+    html += renderStatGrid(pidFilter, dates);
+    html += renderLineChart(dates);
+    html += renderCategoryChart(pidFilter, dates);
+    html += renderComparisonChart(dates);
+    return html;
+  }
+
+  function renderStatGrid(pidFilter, dates){
+    var totalPoints, tasksCompleted=0, daysGoalMet=0;
+    if(pidFilter){
+      totalPoints = periodTotalForParticipant(pidFilter, dates);
+      dates.forEach(function(d){ var e=readEntry(dateKey(d),pidFilter); tasksCompleted += (e.done||[]).length; if(computeDayTotal(pidFilter,dateKey(d))>=goal()) daysGoalMet++; });
+    } else {
+      totalPoints = periodTotalCombined(dates);
+      dates.forEach(function(d){
+        var k=dateKey(d); var anyMet=false;
+        state.participants.forEach(function(p){ var e=readEntry(k,p.id); tasksCompleted += (e.done||[]).length; if(computeDayTotal(p.id,k)>=goal()) anyMet=true; });
+        if(anyMet) daysGoalMet++;
+      });
+    }
+    var avg = dates.length ? (totalPoints/dates.length) : 0;
+    var pct = dates.length ? Math.round((daysGoalMet/dates.length)*100) : 0;
+
+    var curStreak, bestStreak;
+    if(pidFilter){ curStreak=computeStreak(pidFilter); bestStreak=computeBestStreak(pidFilter); }
+    else{
+      curStreak=0; bestStreak=0;
+      state.participants.forEach(function(p){ curStreak=Math.max(curStreak,computeStreak(p.id)); bestStreak=Math.max(bestStreak,computeBestStreak(p.id)); });
+    }
+
+    var cats = categoryTotals(pidFilter, dates);
+    var topCat = null, topVal = 0;
+    CATEGORY_ORDER.forEach(function(c){ if(cats[c]>topVal){ topVal=cats[c]; topCat=c; } });
+
+    var diffHtml = '';
+    if(state.participants.length>=2){
+      var totals = state.participants.map(function(p){ return {name:p.name, total:periodTotalForParticipant(p.id,dates)}; }).sort(function(a,b){return b.total-a.total;});
+      var diff = totals[0].total - totals[1].total;
+      diffHtml = '<div class="stat-card card"><div class="val">'+diff+'</div><div class="lbl">разница лидера: '+escapeHtml(totals[0].name)+' впереди на '+diff+'</div></div>';
+    }
+
+    var html = '<div class="stat-grid">';
+    html += '<div class="stat-card card"><div class="val">'+totalPoints+'</div><div class="lbl">баллов всего</div></div>';
+    html += '<div class="stat-card card"><div class="val">'+tasksCompleted+'</div><div class="lbl">задач выполнено</div></div>';
+    html += '<div class="stat-card card"><div class="val">'+daysGoalMet+'</div><div class="lbl">дней с целью выполнена</div></div>';
+    html += '<div class="stat-card card"><div class="val">🔥'+curStreak+'</div><div class="lbl">текущая серия</div></div>';
+    html += '<div class="stat-card card"><div class="val">🏅'+bestStreak+'</div><div class="lbl">лучшая серия</div></div>';
+    html += '<div class="stat-card card"><div class="val">'+avg.toFixed(1)+'</div><div class="lbl">баллов в среднем/день</div></div>';
+    html += '<div class="stat-card card"><div class="val">'+pct+'%</div><div class="lbl">дней с выполненной целью</div></div>';
+    html += '<div class="stat-card card"><div class="val">'+(topCat?CATEGORY_META[topCat].emoji:'—')+'</div><div class="lbl">самая активная категория'+(topCat?': '+CATEGORY_META[topCat].label:'')+'</div></div>';
+    html += diffHtml;
+    html += '</div>';
+    return html;
+  }
+
+  function renderLineChart(dates){
+    var W=640,H=260,padL=34,padR=16,padT=16,padB=30;
+    var innerW=W-padL-padR, innerH=H-padT-padB;
+    var g = goal();
+    var maxVal = g;
+    var series = state.participants.map(function(p){ return { p:p, values: dates.map(function(d){ return computeDayTotal(p.id, dateKey(d)); }) }; });
+    series.forEach(function(s){ s.values.forEach(function(v){ if(v>maxVal) maxVal=v; }); });
+    maxVal = Math.ceil(maxVal*1.15) || 1;
+    var n = dates.length;
+    function sx(i){ return padL + (n<=1?innerW/2:(i/(n-1))*innerW); }
+    function sy(v){ return padT + innerH - (v/maxVal)*innerH; }
+
+    var svg = '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;" role="img">';
+    // gridlines
+    for(var gl=0; gl<=4; gl++){ var yy = padT + (innerH/4)*gl; svg += '<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" stroke="var(--line)" stroke-width="1"/>'; }
+    // goal line
+    var gy = sy(g).toFixed(1);
+    svg += '<line x1="'+padL+'" y1="'+gy+'" x2="'+(W-padR)+'" y2="'+gy+'" stroke="var(--peach)" stroke-width="1.5" stroke-dasharray="4 4"/>';
+    // x labels (sparse)
+    var step = Math.max(1, Math.ceil(n/8));
+    dates.forEach(function(d,i){ if(i%step===0 || i===n-1){ svg += '<text x="'+sx(i).toFixed(1)+'" y="'+(H-8)+'" font-size="9" fill="var(--plum-soft)" text-anchor="middle" font-family="JetBrains Mono, monospace">'+formatShort(d)+'</text>'; } });
+    // series lines
+    series.forEach(function(s){
+      var pts = s.values.map(function(v,i){ return sx(i).toFixed(1)+','+sy(v).toFixed(1); });
+      svg += '<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+s.p.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+      s.values.forEach(function(v,i){
+        svg += '<circle cx="'+sx(i).toFixed(1)+'" cy="'+sy(v).toFixed(1)+'" r="3.2" fill="'+s.p.color+'"><title>'+escapeHtml(s.p.name)+', '+formatShort(dates[i])+': '+v+' балл(ов)</title></circle>';
+      });
+    });
+    svg += '</svg>';
+
+    var legend = '<div class="game-legend">';
+    state.participants.forEach(function(p){ legend += '<span class="lg-item"><span class="lg-dot" style="background:'+p.color+'"></span>'+escapeHtml(p.name)+'</span>'; });
+    legend += '<span class="lg-item"><span style="width:14px;height:2px;background:var(--peach);display:inline-block;"></span>цель дня</span></div>';
+
+    return '<div class="chart-card card"><h3>📈 Баллы по дням</h3><div class="cap">Наведите на точку, чтобы увидеть дату и баллы.</div>'+svg+legend+'</div>';
+  }
+
+  function renderCategoryChart(pidFilter, dates){
+    var totals = categoryTotals(pidFilter, dates);
+    var max = Math.max.apply(null, CATEGORY_ORDER.map(function(c){return totals[c];}).concat([1]));
+    var html = '<div class="chart-card card"><h3>🥧 Баллы по категориям</h3><div class="cap">За выбранный период'+(pidFilter?'':' (обе участницы)')+'.</div>';
+    var anyData = false;
+    CATEGORY_ORDER.forEach(function(c){
+      var v = totals[c]; if(v>0) anyData=true;
+      var w = Math.round((v/max)*100);
+      html += '<div class="cat-bar-row"><div class="cat-bar-name">'+CATEGORY_META[c].emoji+' '+CATEGORY_META[c].label+'</div>';
+      html += '<div class="cat-bar-bg"><div class="cat-bar-fill" style="width:'+w+'%; background:'+CATEGORY_META[c].color+'"></div></div>';
+      html += '<div class="cat-bar-val">'+v+'</div></div>';
+    });
+    if(!anyData){ html += '<div class="empty-state" style="padding:20px 0;">Пока недостаточно данных. Отметьте несколько задач, и здесь появятся графики ✨</div>'; }
+    html += '</div>';
+    return html;
+  }
+
+  function renderComparisonChart(dates){
+    if(state.participants.length<1) return '';
+    var W=640,H=220,padL=20,padR=20,padT=20,padB=40;
+    var innerW=W-padL-padR, innerH=H-padT-padB;
+    var totals = state.participants.map(function(p){ return {p:p, total:periodTotalForParticipant(p.id,dates)}; });
+    var max = Math.max.apply(null, totals.map(function(x){return x.total;}).concat([1]));
+    var n = totals.length;
+    var bw = Math.min(90, innerW/n*0.5);
+    var svg = '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;" role="img">';
+    totals.forEach(function(t,i){
+      var cx = padL + (innerW/n)*(i+0.5);
+      var h = (t.total/max)*innerH;
+      var y = padT+innerH-h;
+      svg += '<rect x="'+(cx-bw/2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="8" fill="'+t.p.color+'"><title>'+escapeHtml(t.p.name)+': '+t.total+' балл(ов)</title></rect>';
+      svg += '<text x="'+cx.toFixed(1)+'" y="'+(y-6).toFixed(1)+'" font-size="12" font-weight="700" fill="var(--plum)" text-anchor="middle" font-family="JetBrains Mono, monospace">'+t.total+'</text>';
+      svg += '<text x="'+cx.toFixed(1)+'" y="'+(H-14)+'" font-size="11" fill="var(--plum-soft)" text-anchor="middle">'+escapeHtml(t.p.name)+'</text>';
+    });
+    svg += '</svg>';
+    return '<div class="chart-card card"><h3>⚖️ Сравнение участниц</h3><div class="cap">Итог за выбранный период.</div>'+svg+'</div>';
+  }
+
+  /* ======================================================================
+     TAB 3 — ИГРА
+  ====================================================================== */
+  function renderGameTab(){
+    if(state.participants.length===0){
+      return '<div class="onboard"><p>Добавьте <strong>игроков</strong> во вкладке «Задачи», чтобы появилась игровая доска.</p></div>';
+    }
+    var html = '<div class="filter-row"><div class="seg">';
+    [['week','Неделя'],['month','Месяц'],['all','Всё время']].forEach(function(o){
+      html += '<button class="'+(ui.gamePeriod===o[0]?'active':'')+'" data-action="set-game-period" data-period="'+o[0]+'">'+o[1]+'</button>';
+    });
+    html += '</div></div>';
+
+    if(ui.rewardPuff){ html += '<div class="puff">'+ui.rewardPuff.icon+' '+escapeHtml(ui.rewardPuff.label)+' — новая клетка достигнута!</div>'; }
+
+    var positions = state.participants.map(function(p){ return {p:p, pos:gamePosition(p.id, ui.gamePeriod)}; });
+    var leader = positions.slice().sort(function(a,b){return b.pos-a.pos;})[0];
+
+    html += '<div class="game-status card">';
+    html += '<div class="gs-item">🏆 Впереди: <b>'+escapeHtml(leader.p.name)+'</b></div>';
+    positions.forEach(function(x){
+      var toNext = pointsPerCell() - (periodTotalForParticipant(x.p.id, periodDates(ui.gamePeriod)) % pointsPerCell());
+      html += '<div class="gs-item">'+escapeHtml(x.p.name)+': пройдено клеток — <b>'+x.pos+'</b>, до следующей — <b>'+toNext+'</b> балл(ов)</div>';
+    });
+    if(positions.length>=2){
+      var sorted = positions.slice().sort(function(a,b){return b.pos-a.pos;});
+      html += '<div class="gs-item">Разница: <b>'+(sorted[0].pos-sorted[1].pos)+'</b> клеток</div>';
+    }
+    html += '<div class="gs-item">1 клетка = '+pointsPerCell()+' баллов</div>';
+    html += '</div>';
+
+    html += renderGameBoard(positions);
+
+    html += '<div class="reward-list">';
+    REWARDS.forEach(function(r){
+      var reached = positions.some(function(x){ return x.pos>=r.cell; });
+      html += '<span class="reward-chip'+(reached?' reached':'')+'">'+r.icon+' клетка '+(r.cell+1)+' — '+escapeHtml(r.label)+'</span>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function renderGameBoard(positions){
+    var n = numberOfCells();
+    var perRow = 10;
+    var rows = Math.ceil(n/perRow);
+    var html = '<div class="board-card card">';
+    html += '<span class="board-deco" style="top:10px; right:16px;">⭐</span><span class="board-deco" style="bottom:10px; left:16px;">🎀</span>';
+    html += '<h2>🎲 Игровая доска</h2><div class="cap">Каждая клетка = '+pointsPerCell()+' баллов. Фишки двигаются по мере набора баллов.</div>';
+    var cell=0;
+    var rewardMap = {}; REWARDS.forEach(function(r){ rewardMap[r.cell]=r; });
+    for(var r=0;r<rows;r++){
+      html += '<div class="game-row'+(r%2===1?' rev':'')+'">';
+      for(var c=0;c<perRow && cell<n;c++){
+        var cls='gcell'; if(cell===0) cls+=' start'; if(cell===n-1) cls+=' finish';
+        var rw = rewardMap[cell]; if(rw) cls+=' reward';
+        html += '<div class="'+cls+'"><span class="idx">'+(cell+1)+'</span>';
+        if(rw){ html += '<span class="reward-icon">'+rw.icon+'</span>'; }
+        var here = positions.filter(function(x){return x.pos===cell;});
+        if(here.length){
+          html += '<div class="tokens">';
+          here.forEach(function(x){ html += '<div class="token" style="background:'+x.p.color+'" title="'+escapeHtml(x.p.name)+'">'+escapeHtml(x.p.name.charAt(0).toUpperCase())+'</div>'; });
+          html += '</div>';
+        }
+        html += '</div>';
+        cell++;
+      }
+      html += '</div>';
+    }
+    html += '<div class="game-legend">';
+    positions.forEach(function(x){ html += '<span class="lg-item"><span class="lg-dot" style="background:'+x.p.color+'"></span>'+escapeHtml(x.p.name)+'</span>'; });
+    html += '</div></div>';
+    return html;
+  }
+
+  /* ======================================================================
+     ACTIONS
+  ====================================================================== */
+  function confirmAddPlayer(){
+    var nameInput = document.getElementById('new-player-name');
+    var name = nameInput ? nameInput.value.trim() : '';
+    if(!name){ ui.playerFormError='Введите имя игрока.'; render(); var i=document.getElementById('new-player-name'); if(i) i.focus(); return; }
+    var p = { id: uid('p'), name: name, color: pickColor() };
+    state.participants.push(p);
+    if(!myId){ myId = p.id; }
+    ui.showAddPlayer = false; ui.playerFormError='';
+    persist(); render();
+  }
+  function confirmAddTask(cat){
+    var nameEl = document.getElementById('new-task-name-'+cat);
+    var ptsEl = document.getElementById('new-task-points-'+cat);
+    var name = nameEl ? nameEl.value.trim() : '';
+    if(!name){ ui.taskFormError='Введите название задачи.'; render(); var i=document.getElementById('new-task-name-'+cat); if(i) i.focus(); return; }
+    var pts = clampInt(ptsEl?ptsEl.value:2, 1, 20, 2);
+    state.tasks.push({id: uid('t'), category: cat, name: name, points: pts});
+    ui.openAddTaskCat = null; ui.taskFormError='';
+    persist(); render();
+  }
+  function confirmAddWeekly(){
+    var nameEl = document.getElementById('new-weekly-name');
+    var ptsEl = document.getElementById('new-weekly-points');
+    var name = nameEl ? nameEl.value.trim() : '';
+    if(!name){ ui.weeklyFormError='Введите название челленджа.'; render(); var i=document.getElementById('new-weekly-name'); if(i) i.focus(); return; }
+    var pts = clampInt(ptsEl?ptsEl.value:2, 1, 20, 2);
+    state.weeklyChallenges.push({id: uid('w'), name: name, points: pts});
+    ui.showAddWeekly = false; ui.weeklyFormError='';
+    persist(); render();
+  }
+
+  function maybeShowRewardPuff(pid){
+    var before = ui._prevAllTotal===undefined ? null : ui._prevAllTotal;
+    var dates = periodDates('all');
+    var total = periodTotalForParticipant(pid, dates);
+    var n = numberOfCells(), ppc = pointsPerCell();
+    var pos = Math.min(Math.floor(total/ppc), n-1);
+    var prevTotal = ui._lastTotals && ui._lastTotals[pid] !== undefined ? ui._lastTotals[pid] : total;
+    var prevPos = Math.min(Math.floor(prevTotal/ppc), n-1);
+    if(!ui._lastTotals) ui._lastTotals = {};
+    if(pos !== prevPos){
+      var r = REWARDS.find(function(x){return x.cell===pos;});
+      if(r){ ui.rewardPuff = r; setTimeout(function(){ ui.rewardPuff=null; render(); }, 3000); }
+    }
+    ui._lastTotals[pid] = total;
+  }
+
+  document.getElementById('app').addEventListener('click', function(e){
+    var el = e.target.closest('[data-action]'); if(!el) return;
+    var action = el.getAttribute('data-action'); var tk = todayKey();
+
+    if(action==='select-player'){ myId=el.getAttribute('data-id'); render(); }
+    else if(action==='show-add-player'){ ui.showAddPlayer=true; ui.playerFormError=''; render(); setTimeout(function(){var i=document.getElementById('new-player-name'); if(i) i.focus();},0); }
+    else if(action==='cancel-add-player'){ ui.showAddPlayer=false; ui.playerFormError=''; render(); }
+    else if(action==='confirm-add-player'){ confirmAddPlayer(); }
+    else if(action==='remove-player'){
+      var pid=el.getAttribute('data-id'); var p=state.participants.find(function(x){return x.id===pid;});
+      if(p && confirm('Удалить игрока «'+p.name+'»?')){ state.participants=state.participants.filter(function(x){return x.id!==pid;}); if(myId===pid) myId=null; persist(); render(); }
+    }
+    else if(action==='toggle-task'){
+      if(!myId){ alert('Сначала выберите, кто вы.'); return; }
+      var tid=el.getAttribute('data-task'); var entry=ensureEntry(tk,myId);
+      var idx=entry.done.indexOf(tid); if(idx>-1) entry.done.splice(idx,1); else entry.done.push(tid);
+      maybeShowRewardPuff(myId);
+      persist(); render();
+    }
+    else if(action==='toggle-add-task-form'){ var cat=el.getAttribute('data-category'); ui.openAddTaskCat=(ui.openAddTaskCat===cat)?null:cat; ui.taskFormError=''; render(); setTimeout(function(){var i=document.getElementById('new-task-name-'+cat); if(i) i.focus();},0); }
+    else if(action==='cancel-add-task'){ ui.openAddTaskCat=null; ui.taskFormError=''; render(); }
+    else if(action==='confirm-add-task'){ confirmAddTask(el.getAttribute('data-category')); }
+    else if(action==='delete-task'){
+      var tid2=el.getAttribute('data-task'); var tname=el.getAttribute('data-name');
+      if(confirm('Удалить задачу «'+tname+'»?')){
+        state.tasks=state.tasks.filter(function(x){return x.id!==tid2;});
+        Object.keys(state.entries).forEach(function(dk){ Object.keys(state.entries[dk]).forEach(function(pid){ var e=state.entries[dk][pid]; if(e && e.done){ e.done=e.done.filter(function(x){return x!==tid2;}); } }); });
+        persist(); render();
+      }
+    }
+    else if(action==='toggle-antiproc'){
+      if(!myId){ alert('Сначала выберите, кто вы.'); return; }
+      var entryA=ensureEntry(tk,myId); entryA.antiDone=!entryA.antiDone;
+      maybeShowRewardPuff(myId);
+      persist(); render();
+    }
+    else if(action==='toggle-weekly'){
+      if(!myId){ alert('Сначала выберите, кто вы.'); return; }
+      var cid=el.getAttribute('data-challenge'); var wn=Math.ceil(todayDate().getDate()/7);
+      if(!state.weeklyProgress[wn]) state.weeklyProgress[wn]={}; if(!state.weeklyProgress[wn][myId]) state.weeklyProgress[wn][myId]={};
+      state.weeklyProgress[wn][myId][cid]=!state.weeklyProgress[wn][myId][cid]; persist(); render();
+    }
+    else if(action==='toggle-add-weekly-form'){ ui.showAddWeekly=true; ui.weeklyFormError=''; render(); setTimeout(function(){var i=document.getElementById('new-weekly-name'); if(i) i.focus();},0); }
+    else if(action==='cancel-add-weekly'){ ui.showAddWeekly=false; ui.weeklyFormError=''; render(); }
+    else if(action==='confirm-add-weekly'){ confirmAddWeekly(); }
+    else if(action==='delete-weekly'){
+      var cid2=el.getAttribute('data-challenge'); var cname=el.getAttribute('data-name');
+      if(confirm('Удалить челлендж «'+cname+'»?')){
+        state.weeklyChallenges=state.weeklyChallenges.filter(function(x){return x.id!==cid2;});
+        Object.keys(state.weeklyProgress).forEach(function(wn){ Object.keys(state.weeklyProgress[wn]).forEach(function(pid){ delete state.weeklyProgress[wn][pid][cid2]; }); });
+        persist(); render();
+      }
+    }
+    else if(action==='refresh-now'){ pollTick(true); }
+    else if(action==='export-json'){ onExportJson(); }
+    else if(action==='switch-tab'){ setActiveTab(el.getAttribute('data-tab')); }
+    else if(action==='set-progress-period'){ ui.progressPeriod=el.getAttribute('data-period'); render(); }
+    else if(action==='set-progress-participant'){ ui.progressParticipant=el.getAttribute('data-pid'); render(); }
+    else if(action==='set-game-period'){ ui.gamePeriod=el.getAttribute('data-period'); render(); }
+  });
+
+  document.getElementById('app').addEventListener('change', function(e){
+    var el=e.target; var field=el.getAttribute('data-field'); if(!field) return;
+    if(field==='daily-goal'){ var v=clampInt(el.value,1,30,8); state.settings.dailyGoal=v; persist(); render(); }
+    else if(field==='antiproc-text'){ if(!myId) return; var entry=ensureEntry(todayKey(),myId); entry.antiText=el.value; persist(); }
+  });
+
+  document.getElementById('app').addEventListener('keydown', function(e){
+    var t = e.target;
+    if(t.matches && (t.matches('[data-role="task-name-input"]') || t.matches('[data-role="task-points-input"]'))){
+      if(e.key==='Enter'){ e.preventDefault(); confirmAddTask(t.getAttribute('data-category')); }
+      else if(e.key==='Escape'){ ui.openAddTaskCat=null; ui.taskFormError=''; render(); }
+    } else if(t.matches && (t.matches('[data-role="weekly-name-input"]') || t.matches('[data-role="weekly-points-input"]'))){
+      if(e.key==='Enter'){ e.preventDefault(); confirmAddWeekly(); }
+      else if(e.key==='Escape'){ ui.showAddWeekly=false; ui.weeklyFormError=''; render(); }
+    } else if(t.matches && t.matches('[data-role="player-name-input"]')){
+      if(e.key==='Enter'){ e.preventDefault(); confirmAddPlayer(); }
+      else if(e.key==='Escape'){ ui.showAddPlayer=false; ui.playerFormError=''; render(); }
+    }
+  });
+
+  /* ======================================================================
+     BACKUP EXPORT / IMPORT
+  ====================================================================== */
+  function onExportJson(){
+    var blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href=url; a.download='challenge-backup-'+todayKey()+'.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+  function onImportFile(e){
+    var file = e.target.files && e.target.files[0]; if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      try{
+        var data = JSON.parse(reader.result);
+        state = migrateState(data);
+        persist(); render();
+      }catch(err){ alert('Не получилось прочитать файл резервной копии.'); }
+    };
+    reader.readAsText(file);
+  }
+
+  /* ======================================================================
+     SYNC LOOP
+  ====================================================================== */
+  var syncing=false;
+  async function pollTick(force){
+    if(!remoteAvailable || syncing) return;
+    var activeEl=document.activeElement; var typing = activeEl && (activeEl.tagName==='INPUT'||activeEl.tagName==='TEXTAREA') && !force;
+    if(typing) return;
+    if(!force && (Date.now()-lastLocalChangeAt) < 8000) return; // не перетирать свежие локальные правки
+    syncing=true;
+    var remote = await tryRemoteLoad();
+    if(remote){
+      state = migrateState(remote);
+      syncStatus='synced'; saveLocal(state);
+      render();
+    } else if(remoteAvailable) {
+      syncStatus='error'; updateStatusBadge();
+    }
+    syncing=false;
+  }
+
+  async function init(){
+    var local = loadLocal();
+    if(local) state = migrateState(local);
+
+    if(remoteAvailable){
+      var remote = await tryRemoteLoad();
+      if(remote){ state = migrateState(remote); syncStatus='synced'; saveLocal(state); }
+      else if(local){ syncStatus='local'; await tryRemoteSave(state); }
+      else { syncStatus='local'; }
+    } else {
+      syncStatus = local ? 'local' : 'local';
+    }
+
+    render();
+    if(remoteAvailable){ setInterval(function(){ pollTick(false); }, 5000); }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
