@@ -416,7 +416,16 @@ const challengeDocRef = doc(firestoreDb, 'challenge', 'shared');
      APP STATE
   ====================================================================== */
   var state = defaultState();
-  var myId = null;
+  var MY_ID_STORAGE_KEY = 'gaffari-challenge-my-id';
+  function loadMyId(){ try{ return localStorage.getItem(MY_ID_STORAGE_KEY); }catch(e){ return null; } }
+  function saveMyId(id){ try{ if(id) localStorage.setItem(MY_ID_STORAGE_KEY, id); else localStorage.removeItem(MY_ID_STORAGE_KEY); }catch(e){} }
+  function validateMyId(){
+    if(myId && !state.participants.some(function(p){ return p.id===myId; })){
+      myId = null;
+      saveMyId(null);
+    }
+  }
+  var myId = loadMyId();
   var ui = {
     activeTab: 'tasks',
     showAddPlayer:false, playerFormError:'',
@@ -930,7 +939,7 @@ const challengeDocRef = doc(firestoreDb, 'challenge', 'shared');
     if(!name){ ui.playerFormError='Введите имя игрока.'; render(); var i=document.getElementById('new-player-name'); if(i) i.focus(); return; }
     var p = { id: uid('p'), name: name, color: pickColor() };
     state.participants.push(p);
-    if(!myId){ myId = p.id; }
+    if(!myId){ myId = p.id; saveMyId(myId); }
     ui.showAddPlayer = false; ui.playerFormError='';
     persist(); render();
   }
@@ -975,13 +984,13 @@ const challengeDocRef = doc(firestoreDb, 'challenge', 'shared');
     var el = e.target.closest('[data-action]'); if(!el) return;
     var action = el.getAttribute('data-action'); var tk = todayKey();
 
-    if(action==='select-player'){ myId=el.getAttribute('data-id'); render(); }
+    if(action==='select-player'){ myId=el.getAttribute('data-id'); saveMyId(myId); render(); }
     else if(action==='show-add-player'){ ui.showAddPlayer=true; ui.playerFormError=''; render(); setTimeout(function(){var i=document.getElementById('new-player-name'); if(i) i.focus();},0); }
     else if(action==='cancel-add-player'){ ui.showAddPlayer=false; ui.playerFormError=''; render(); }
     else if(action==='confirm-add-player'){ confirmAddPlayer(); }
     else if(action==='remove-player'){
       var pid=el.getAttribute('data-id'); var p=state.participants.find(function(x){return x.id===pid;});
-      if(p && confirm('Удалить игрока «'+p.name+'»?')){ state.participants=state.participants.filter(function(x){return x.id!==pid;}); if(myId===pid) myId=null; persist(); render(); }
+      if(p && confirm('Удалить игрока «'+p.name+'»?')){ state.participants=state.participants.filter(function(x){return x.id!==pid;}); if(myId===pid){ myId=null; saveMyId(null); } persist(); render(); }
     }
     else if(action==='toggle-task'){
       if(!myId){ alert('Сначала выберите, кто вы.'); return; }
@@ -1135,10 +1144,12 @@ const challengeDocRef = doc(firestoreDb, 'challenge', 'shared');
       var snapshot = await getDoc(challengeDocRef);
       if(snapshot.exists()) state = migrateState(snapshot.data());
       else await setDoc(challengeDocRef, state);
+      validateMyId();
       syncStatus = 'synced';
       onSnapshot(challengeDocRef, function(remoteSnapshot){
         if(remoteSnapshot.exists()){
           state = migrateState(remoteSnapshot.data());
+          validateMyId();
           syncStatus = 'synced';
           render();
         }
