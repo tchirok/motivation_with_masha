@@ -610,7 +610,7 @@
         if(tab){activeTab=tab.dataset.tab;render();return;}
         const mode=e.target.closest('[data-mode]');
         if(mode){activeMode=mode.dataset.mode;render();return;}
-        const date=e.target.closest('[data-date]');
+        const date=e.target.closest('.day-cell[data-date]');
         if(date){selectedDate=date.dataset.date;calendarMonth=new Date(fromKey(selectedDate).getFullYear(),fromKey(selectedDate).getMonth(),1);render();return;}
         const rangeButton=e.target.closest('[data-range]');
         if(rangeButton){range=rangeButton.dataset.range;render();return;}
