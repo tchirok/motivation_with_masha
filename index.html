@@ -195,6 +195,10 @@
     .team-chart-grid { stroke:#f0e5eb; stroke-width:1; }
     .team-chart-line { fill:none; stroke:#df4a83; stroke-width:3.5; stroke-linecap:round; stroke-linejoin:miter; }
     .team-chart-point { fill:#fff; stroke:#df4a83; stroke-width:2; }
+    .team-legend { display:flex; flex-wrap:wrap; gap:9px 16px; padding:12px 4px 3px; }
+    .team-legend-item { display:inline-flex; align-items:center; gap:6px; color:var(--muted); font-size:.76rem; }
+    .team-legend-item i { width:10px; height:10px; border-radius:50%; display:inline-block; flex:0 0 10px; }
+    .team-legend-item strong { color:var(--ink); font-weight:800; }
     .team-chart-empty { padding:48px 16px; text-align:center; color:var(--muted); }
     .analytics-footnote { margin:9px 3px 0; color:var(--muted); font-size:.76rem; }
     @media (max-width:560px) {
@@ -811,15 +815,77 @@
       function renderTeamAnalytics() {
         const personIds = people.map(person => person.id);
         const daily = getAnalyticsDaily(personIds);
-        const totalPoints = daily.reduce((sum, day) => sum + day.points, 0);
         const activeDays = daily.filter(day => day.actions > 0).length;
         const antiWins = daily.reduce((sum, day) => sum + personIds.reduce((count, personId) =>
           count + (state.procrastination?.[day.date]?.[personId] || []).length, 0), 0);
 
-        return `<section class="section-head"><div><h2>👥 Общая аналитика команды</h2><p>Суммарный прогресс всех ${people.length} участниц</p></div></section>
+        // Build one independent daily series for each participant, using her profile color.
+        const series = people.map(person => ({
+          ...person,
+          daily: daily.map(day => ({
+            date: day.date,
+            points: totals(person.id, day.date).points,
+            actions: totals(person.id, day.date).count
+          })),
+          total: daily.reduce((sum, day) => sum + totals(person.id, day.date).points, 0)
+        }));
+
+        const peak = Math.max(0, ...series.flatMap(item => item.daily.map(day => day.points)));
+        const maxY = Math.max(4, Math.ceil(peak / 4) * 4);
+        const width = 760, height = 300;
+        const left = 48, right = 18, top = 18, bottom = 48;
+        const plotWidth = width - left - right;
+        const plotHeight = height - top - bottom;
+        const baseY = top + plotHeight;
+
+        const grid = Array.from({ length: 5 }, (_, index) => {
+          const value = maxY - (maxY * index / 4);
+          const y = top + plotHeight * index / 4;
+          return `<g><line class="team-chart-grid" x1="${left}" y1="${y.toFixed(1)}" x2="${width-right}" y2="${y.toFixed(1)}"/><text x="${left-10}" y="${(y+4).toFixed(1)}" text-anchor="end">${Math.round(value)}</text></g>`;
+        }).join('');
+
+        const tickIndexes = [...new Set([
+          0,
+          Math.round((daily.length - 1) * .25),
+          Math.round((daily.length - 1) * .5),
+          Math.round((daily.length - 1) * .75),
+          daily.length - 1
+        ])].filter(index => index >= 0 && index < daily.length);
+        const xLabels = tickIndexes.map(index => {
+          const date = daily[index].date;
+          const x = left + (daily.length <= 1 ? plotWidth / 2 : index * plotWidth / (daily.length - 1));
+          const label = fromKey(date).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+          return `<text x="${x.toFixed(1)}" y="${height-15}" text-anchor="middle">${label}</text>`;
+        }).join('');
+
+        const lineMarkup = series.map(person => {
+          const safeColor = /^#[0-9a-f]{6}$/i.test(person.color) ? person.color : '#df4a83';
+          const points = person.daily.map((day, index) => ({
+            x: left + (person.daily.length <= 1 ? plotWidth / 2 : index * plotWidth / (person.daily.length - 1)),
+            y: baseY - (day.points / maxY) * plotHeight,
+            ...day
+          }));
+          const path = points.length
+            ? points.map((point, index) => `${index ? 'L' : 'M'} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(' ')
+            : '';
+          const dots = points.map(point =>
+            `<circle class="team-chart-point" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="2.8" style="stroke:${safeColor}"><title>${esc(person.name)} · ${esc(formatLong(point.date))}: ${point.points} баллов · ${point.actions} действий</title></circle>`
+          ).join('');
+          return `<g><path class="team-chart-line" d="${path}" style="stroke:${safeColor}"/>${dots}</g>`;
+        }).join('');
+
+        const legend = series.map(person => {
+          const safeColor = /^#[0-9a-f]{6}$/i.test(person.color) ? person.color : '#df4a83';
+          return `<span class="team-legend-item"><i style="background:${safeColor}"></i><strong>${esc(person.name)}</strong><span>${person.total} баллов</span></span>`;
+        }).join('');
+
+        return `<section class="section-head"><div><h2>👥 Общая аналитика команды</h2><p>Отдельная динамика каждой участницы · цвет соответствует её профилю</p></div></section>
           <div class="range-switch">${[['7','7 дней'],['month','Этот месяц'],['all','Всё время']].map(([id,label])=>`<button class="range-button ${range===id?'active':''}" data-range="${id}" type="button">${label}</button>`).join('')}</div>
-          ${renderLineChart(daily, 'Динамика команды', 'Сумма баллов всех участниц за каждый календарный день', '#df4a83', `График суммарных баллов всех ${people.length} участниц по дням`)}
-          <p class="analytics-footnote">За период команда набрала ${totalPoints} баллов и была активна ${activeDays} дней. Анти-прокрастинация: ${antiWins} небольших побед · по 2 балла за каждую.</p>`;
+          <article class="panel team-chart-card">
+            <div class="team-chart-heading"><div><h3>Динамика участниц</h3><p>Каждая цветная линия показывает баллы за день. Наведи на точку, чтобы увидеть подробности.</p></div></div>
+            ${daily.length ? `<div class="team-chart-wrap"><svg class="team-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Индивидуальная динамика баллов каждой участницы">${grid}${lineMarkup}${xLabels}</svg></div><div class="team-legend">${legend}</div>` : '<div class="team-chart-empty">Пока нет данных для графика. Отметьте первые задачи — здесь появится динамика команды.</div>'}
+          </article>
+          <p class="analytics-footnote">За период команда была активна ${activeDays} дней. Анти-прокрастинация: ${antiWins} небольших побед · по 2 балла за каждую.</p>`;
       }
       function render() {
         renderHero(); renderTabs(); renderPeopleManager();
