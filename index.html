@@ -53,8 +53,8 @@
     .profile-tabs { display:flex; gap:8px; overflow-x:auto; padding:3px 1px 11px; scrollbar-width:thin; }
     .nav-tab { flex:0 0 auto; display:flex; align-items:center; gap:10px; padding:10px 15px 10px 10px; border-radius:999px; background:rgba(255,255,255,.82); box-shadow:0 5px 15px rgba(86,40,73,.06); font-weight:750; color:var(--ink); transition:.18s ease; }
     .nav-tab:hover { transform:translateY(-2px); }
-    .nav-tab.active { background:var(--pink); color:white; box-shadow:0 8px 18px rgba(232,60,120,.24); }
-    .avatar { width:31px; height:31px; display:grid; place-items:center; border-radius:50%; background:linear-gradient(145deg,#f6a8c3,#c989d1); color:white; font-weight:900; }
+    .nav-tab.active { background:var(--avatar-color,var(--pink)); color:white; box-shadow:0 8px 18px rgba(130,84,171,.20); }
+    .avatar { width:31px; height:31px; display:grid; place-items:center; border-radius:50%; background:var(--avatar-color,linear-gradient(145deg,#f6a8c3,#c989d1)); color:white; font-weight:900; }
     .nav-tab.active .avatar { background:rgba(255,255,255,.26); }
     .tab-name { display:block; font-size:.87rem; }
     .tab-meta { display:block; font-size:.7rem; opacity:.78; font-weight:650; }
@@ -63,7 +63,7 @@
     .mode-tab.active { background:linear-gradient(115deg,var(--pink),var(--plum)); color:white; box-shadow:0 4px 10px rgba(130,84,171,.2); }
     .panel { background:var(--paper); border:1px solid rgba(255,255,255,.92); border-radius:var(--radius); box-shadow:var(--shadow); }
     .summary { padding:20px 24px; display:flex; align-items:center; gap:20px; margin-bottom:15px; }
-    .ring { width:76px; height:76px; flex:0 0 76px; border-radius:50%; display:grid; place-items:center; position:relative; background:conic-gradient(var(--pink) var(--progress,0%), #f5dfe9 0); }
+    .ring { width:76px; height:76px; flex:0 0 76px; border-radius:50%; display:grid; place-items:center; position:relative; background:conic-gradient(var(--ring-color,var(--pink)) var(--progress,0%), #f5dfe9 0); }
     .ring::before { content:""; position:absolute; inset:7px; border-radius:50%; background:white; }
     .ring-content { position:relative; text-align:center; line-height:1.05; }
     .ring strong { display:block; font-size:1.08rem; }
@@ -106,6 +106,26 @@
     .selected-day span { color:var(--muted); font-size:.77rem; }
     .selected-day-label { display:grid; gap:3px; }
     .task-section { margin:0 0 18px; }
+    .people-toolbar { display:flex; justify-content:flex-end; margin:-2px 0 13px; }
+    .people-manager { padding:18px; margin:0 0 16px; }
+    .people-manager h2 { margin:0 0 5px; font-size:1rem; }
+    .people-manager p { margin:0 0 14px; color:var(--muted); font-size:.78rem; }
+    .people-manager-list { display:grid; gap:8px; }
+    .people-manager-row { display:grid; grid-template-columns:minmax(120px,1fr) 48px auto auto; gap:8px; align-items:center; padding:9px 0; border-bottom:1px dashed var(--line); }
+    .people-manager-row input[type=text], .people-add-form input[type=text] { min-width:0; width:100%; padding:9px 10px; border:1px solid #ecd9e3; border-radius:10px; background:#fff; color:var(--ink); }
+    .people-manager-row input[type=color], .people-add-form input[type=color] { width:42px; height:36px; border:0; background:transparent; padding:2px; cursor:pointer; }
+    .people-add-form { display:grid; grid-template-columns:minmax(120px,1fr) 48px auto; gap:8px; align-items:center; margin-top:14px; }
+    .people-manager-actions { display:flex; gap:7px; align-items:center; }
+    .anti-card { width:min(100%, 760px); padding:17px 19px; margin:0 0 18px; border-left:4px solid #e1a53c; background:linear-gradient(120deg,rgba(255,250,239,.98),rgba(255,253,253,.96)); }
+    .anti-card h2 { margin:0 0 6px; font-size:1rem; }
+    .anti-card .anti-copy { margin:0 0 12px; color:var(--muted); font-size:.8rem; line-height:1.5; }
+    .anti-form { display:flex; flex-wrap:wrap; gap:8px; }
+    .anti-form input { flex:1 1 220px; min-width:0; padding:10px 12px; border:1px solid #ecd9e3; border-radius:10px; background:#fff; color:var(--ink); }
+    .anti-result { margin:0 !important; padding:10px 12px; background:#fff8e9; border:1px solid #f2e2bd; border-radius:11px; color:var(--ink) !important; font-size:.82rem !important; line-height:1.5; }
+    .anti-result strong { color:#986616; }
+    .anti-remove { display:inline-flex; margin:9px 0 0; padding:5px 0; border:0; background:transparent; color:#a58d70; font-size:.72rem; cursor:pointer; }
+    .anti-remove:hover { color:#9b5a27; }
+    .anti-hint { margin-top:8px; color:#9a866c; font-size:.7rem; }
     .task-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
     .task-card { border-left:4px solid var(--card-color,var(--pink)); padding:16px 16px 14px; min-height:154px; }
     .task-card h3 { margin:0 0 10px; font-size:.98rem; }
@@ -148,6 +168,7 @@
     .empty-state { padding:22px; text-align:center; color:var(--muted); }
     .empty-state strong { color:var(--ink); }
     .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:11px; margin-bottom:16px; }
+    .personal-metrics { grid-template-columns:repeat(3,minmax(0,1fr)); }
     .metric { padding:17px 18px; min-height:94px; }
     .metric strong { display:block; color:var(--pink-dark); font-size:1.45rem; line-height:1; }
     .metric span { display:block; margin-top:8px; color:var(--muted); font-size:.76rem; }
@@ -163,6 +184,25 @@
     .bar-value { font-size:.62rem; color:var(--muted); }
     .bar { width:min(72%,34px); min-height:3px; border-radius:7px 7px 2px 2px; background:linear-gradient(180deg,#e873a0,#a779ce); transition:height .2s; }
     .bar-label { color:var(--muted); font-size:.61rem; white-space:nowrap; }
+    .team-chart-card { padding:20px 22px 14px; margin-top:12px; }
+    .team-chart-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:10px; }
+    .team-chart-heading h3 { margin:0 0 5px; font-size:1.02rem; }
+    .team-chart-heading p { margin:0; color:var(--muted); font-size:.78rem; }
+    .team-chart-total { flex:0 0 auto; padding:8px 12px; border-radius:12px; background:#fff3f7; color:var(--pink-dark); font-weight:900; font-size:.9rem; white-space:nowrap; }
+    .team-chart-wrap { width:100%; overflow:hidden; }
+    .team-chart-svg { display:block; width:100%; height:auto; min-height:210px; }
+    .team-chart-svg text { font-family:inherit; fill:var(--muted); font-size:11px; }
+    .team-chart-grid { stroke:#f0e5eb; stroke-width:1; }
+    .team-chart-line { fill:none; stroke:#df4a83; stroke-width:3.5; stroke-linecap:round; stroke-linejoin:miter; }
+    .team-chart-point { fill:#fff; stroke:#df4a83; stroke-width:2; }
+    .team-chart-empty { padding:48px 16px; text-align:center; color:var(--muted); }
+    .analytics-footnote { margin:9px 3px 0; color:var(--muted); font-size:.76rem; }
+    @media (max-width:560px) {
+      .team-chart-card { padding:16px 12px 10px; }
+      .team-chart-heading { flex-direction:column; }
+      .team-chart-total { font-size:.82rem; }
+      .team-chart-svg { min-height:180px; }
+    }
     .category-list { display:grid; gap:13px; margin-top:19px; }
     .category-line { display:grid; grid-template-columns:minmax(95px,140px) 1fr 34px; align-items:center; gap:8px; font-size:.75rem; }
     .category-name { color:var(--muted); }
@@ -189,6 +229,10 @@
       .summary-right { display:none; }
     }
     @media (max-width:560px) {
+      .people-manager-row { grid-template-columns:minmax(100px,1fr) 42px auto; }
+      .people-manager-row .member-remove { grid-column:1 / -1; justify-self:end; }
+      .people-add-form { grid-template-columns:minmax(100px,1fr) 42px auto; }
+      .people-manager, .anti-card { padding:14px 12px; }
       .app { width:min(100% - 22px,1240px); padding-top:19px; }
       .topline { align-items:flex-start; flex-direction:column; gap:8px; }
       h1 { font-size:2.2rem; line-height:.98; }
@@ -197,8 +241,8 @@
       .pill, .target-control { padding:8px 10px; font-size:.75rem; }
       .profile-tabs { margin-right:-11px; }
       .nav-tab { padding:8px 11px 8px 8px; }
-      .modebar { width:100%; }
-      .mode-tab { flex:1; padding:10px 8px; }
+      .modebar { width:100%; gap:2px; }
+      .mode-tab { flex:1; min-width:0; padding:10px 6px; font-size:.72rem; white-space:nowrap; }
       .summary { padding:16px; gap:13px; }
       .ring { width:64px; height:64px; flex-basis:64px; }
       .summary h2 { font-size:.94rem; }
@@ -243,10 +287,15 @@
       </div>
     </header>
 
-    <nav class="profile-tabs" id="profile-tabs" aria-label="Разделы сайта"></nav>
-    <nav class="modebar" aria-label="Режим просмотра">
+    <nav class="profile-tabs" id="profile-tabs" aria-label="Участницы"></nav>
+    <div class="people-toolbar">
+      <button class="quiet-button" id="manage-people-button" type="button" aria-expanded="false">⚙ Участницы</button>
+    </div>
+    <section id="people-manager" class="panel people-manager" hidden></section>
+    <nav class="modebar" aria-label="Разделы трекера">
       <button class="mode-tab active" data-mode="tasks" type="button">📝 Задачи</button>
-      <button class="mode-tab" data-mode="progress" type="button">📊 Прогресс</button>
+      <button class="mode-tab" data-mode="personal-progress" type="button">👤 Личная аналитика</button>
+      <button class="mode-tab" data-mode="team-progress" type="button">👥 Общая аналитика</button>
     </nav>
     <main id="main-content"></main>
     <footer class="footer-note">Один маленький шаг — уже движение вперёд. Снежинки напоминают: отмечать можно и задним числом 💗</footer>
@@ -287,14 +336,16 @@
     }
 
     (() => {
-      const people = [
+      const defaultPeople = [
         { id:'katya', name:'Катя', avatar:'К', color:'#e84a82' },
         { id:'masha', name:'Маша', avatar:'М', color:'#8c64c4' },
         { id:'lisa', name:'Лиза', avatar:'Л', color:'#e0a347' },
         { id:'nastya', name:'Настя', avatar:'Н', color:'#33a38c' },
         { id:'dasha', name:'Даша', avatar:'Д', color:'#7962c6' }
       ];
-      const tabs = people;
+      let people = defaultPeople.map(person=>({...person}));
+      let tabs = people;
+      let peopleManagerOpen = false;
       const palette = ['#9670ce','#6688d7','#e0a43e','#81667c','#36a58f','#8060c7','#ef7da0','#e8447b'];
       const seedTasks = {
         common: [
@@ -400,6 +451,8 @@
               cloudSaveTimer = null;
             }
             state = data.state;
+            normalizeState();
+            if (!people.some(person=>person.id===activeTab)) activeTab = people[0].id;
             try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
             setCloudStatus('Получены изменения');
             render();
@@ -414,7 +467,31 @@
       }
       const today = dateKey(new Date());
       let state = (initialCloudState && initialCloudState.tasks && initialCloudState.completions) ? initialCloudState : loadState();
-      let activeTab = 'katya';
+      function normalizeState() {
+        if (!state || typeof state !== 'object') state = {};
+        const sourcePeople = Array.isArray(state.people) && state.people.length ? state.people : defaultPeople;
+        people = sourcePeople.filter(person=>person && person.id && person.name).map((person,index)=>({
+          id:String(person.id),
+          name:String(person.name).trim() || `Участница ${index+1}`,
+          avatar:String(person.avatar || Array.from(String(person.name||'•'))[0] || '•'),
+          color:/^#[0-9a-f]{6}$/i.test(person.color||'') ? person.color : palette[index%palette.length]
+        }));
+        if (!people.length) people = defaultPeople.map(person=>({...person}));
+        tabs = people;
+        state.people = people;
+        state.tasks = state.tasks && typeof state.tasks === 'object' ? state.tasks : {};
+        if (!Array.isArray(state.tasks.common)) state.tasks.common = seedTasks.common.map(task=>({...task}));
+        for (const person of people) if (!Array.isArray(state.tasks[person.id])) state.tasks[person.id] = [];
+        state.categories = state.categories && typeof state.categories === 'object' ? state.categories : {};
+        for (const owner of ['common', ...people.map(person=>person.id)]) {
+          if (!Array.isArray(state.categories[owner])) state.categories[owner] = [...new Set((state.tasks[owner]||[]).map(task=>task.category))];
+        }
+        state.completions = state.completions && typeof state.completions === 'object' ? state.completions : {};
+        state.procrastination = state.procrastination && typeof state.procrastination === 'object' ? state.procrastination : {};
+        state.target = Number(state.target) || 20;
+      }
+      normalizeState();
+      let activeTab = people[0].id;
       let activeMode = 'tasks';
       let selectedDate = today;
       let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -467,16 +544,20 @@
         const tasks = allTasksFor(personId);
         const doneIds = state.completions[day]?.[personId] || [];
         const doneTasks = tasks.filter(t=>doneIds.includes(t.id));
-        return { points:doneTasks.reduce((s,t)=>s+t.points,0), count:doneTasks.length, total:tasks.length, doneTasks };
+        const antiEntries = state.procrastination?.[day]?.[personId] || [];
+        const antiPoints = antiEntries.reduce((sum,entry)=>sum+(Number(entry.points)||2),0);
+        return { points:doneTasks.reduce((s,t)=>s+t.points,0)+antiPoints, count:doneTasks.length+antiEntries.length, total:tasks.length, doneTasks, antiEntries };
       }
       function allPoints(personId) {
-        return Object.keys(state.completions).reduce((sum,day)=>sum+totals(personId,day).points,0);
+        const days = new Set([...Object.keys(state.completions), ...Object.keys(state.procrastination)]);
+        return [...days].reduce((sum,day)=>sum+totals(personId,day).points,0);
       }
-      function daysActive(personId, keys=Object.keys(state.completions)) {
-        return keys.filter(d=>(state.completions[d]?.[personId]||[]).length>0).length;
+      function daysActive(personId, keys=Object.keys({...state.completions, ...state.procrastination})) {
+        return keys.filter(d=>((state.completions[d]?.[personId]||[]).length + (state.procrastination[d]?.[personId]||[]).length)>0).length;
       }
       function streaks(personId) {
-        const active = new Set(Object.keys(state.completions).filter(d=>(state.completions[d]?.[personId]||[]).length>0));
+        const allDays = new Set([...Object.keys(state.completions), ...Object.keys(state.procrastination)]);
+        const active = new Set([...allDays].filter(d=>((state.completions[d]?.[personId]||[]).length + (state.procrastination[d]?.[personId]||[]).length)>0));
         let current=0, cursor=fromKey(today);
         while (active.has(dateKey(cursor))) { current++; cursor.setDate(cursor.getDate()-1); }
         let best=0, run=0, prev=null;
@@ -492,7 +573,7 @@
         const el=document.getElementById('profile-tabs');
         el.innerHTML=tabs.map(t=>{
           const meta=`${totals(t.id,today).points} баллов сегодня`;
-          return `<button type="button" class="nav-tab ${activeTab===t.id?'active':''}" data-tab="${t.id}" style="--avatar-color:${t.color}"><span class="avatar">${t.avatar}</span><span><span class="tab-name">${t.name}</span><span class="tab-meta">${meta}</span></span></button>`;
+          return `<button type="button" class="nav-tab ${activeTab===t.id?'active':''}" data-tab="${esc(t.id)}" style="--avatar-color:${esc(t.color)}"><span class="avatar">${esc(t.avatar)}</span><span><span class="tab-name">${esc(t.name)}</span><span class="tab-meta">${meta}</span></span></button>`;
         }).join('');
       }
       function renderHero() {
@@ -510,10 +591,10 @@
         const target=state.target;
         const percent=target ? Math.min(100,Math.round(points/target*100)) : 0;
         const sumEl=document.createElement('section'); sumEl.className='panel summary';
-        sumEl.innerHTML=`<div class="ring" style="--progress:${percent*3.6}deg"><div class="ring-content"><strong>${points}</strong><span>из ${target}</span></div></div><div><h2>${esc(person.name)}, ${selectedDate===today?'сегодня':'за выбранный день'} · ${count===1?'1 задача':count>=2&&count<=4?`${count} задачи`:`${count} задач`} выполнено</h2><p>Серия дней подряд: 🔥 ${streaks(person.id).current} · баллы за месяц: ${pointsInMonth(person.id)}</p></div><div class="summary-right"><div class="summary-stat"><strong>${total}</strong><span>задач в списке</span></div></div>`;
+        sumEl.innerHTML=`<div class="ring" style="--progress:${percent*3.6}deg;--ring-color:${esc(person.color)}"><div class="ring-content"><strong>${points}</strong><span>из ${target}</span></div></div><div><h2>${esc(person.name)}, ${selectedDate===today?'сегодня':'за выбранный день'} · ${count===1?'1 задача':count>=2&&count<=4?`${count} задачи`:`${count} задач`} выполнено</h2><p>Серия дней подряд: 🔥 ${streaks(person.id).current} · баллы за месяц: ${pointsInMonth(person.id)}</p></div><div class="summary-right"><div class="summary-stat"><strong>${total}</strong><span>задач в списке</span></div></div>`;
         return sumEl.outerHTML;
       }
-      function pointsInMonth(personId) { const now=new Date(), prefix=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-`; return Object.keys(state.completions).filter(d=>d.startsWith(prefix)).reduce((s,d)=>s+totals(personId,d).points,0); }
+      function pointsInMonth(personId) { const now=new Date(), prefix=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-`; const days=new Set([...Object.keys(state.completions),...Object.keys(state.procrastination)]); return [...days].filter(d=>d.startsWith(prefix)).reduce((s,d)=>s+totals(personId,d).points,0); }
       function renderCalendar() {
         const y=calendarMonth.getFullYear(), m=calendarMonth.getMonth();
         const first=new Date(y,m,1), offset=(first.getDay()+6)%7, days=new Date(y,m+1,0).getDate();
@@ -522,7 +603,7 @@
         for(let i=0;i<offset;i++) cells.push('<div class="day-cell outside" aria-hidden="true"></div>');
         for(let n=1;n<=days;n++) {
           const d=dateKey(new Date(y,m,n)), future=d>today, isToday=d===today;
-          const count=(state.completions[d]?.[activeTab]||[]).length;
+          const count=totals(activeTab,d).count;
           const colors=count?'<i class="day-dot"></i>':'';
           cells.push(`<button type="button" class="day-cell ${selectedDate===d?'selected':''} ${isToday?'today':''} ${future?'future':''}" data-date="${d}" ${future?'disabled':''} aria-label="${esc(new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long'}).format(fromKey(d)))}${count?`, выполнено задач: ${count}`:''}"><span class="day-number">${n}</span><span class="day-meta">${colors}<span class="day-count">${count||''}</span></span></button>`);
         }
@@ -550,6 +631,20 @@
         const ownerTasks=tasks.filter(t=>t.category===category);
         return `<article class="panel task-card" style="--card-color:${palette[index%palette.length]}"><div class="task-card-head"><h3>${esc(category)}</h3>${blockControls(owner,category)}</div>${ownerTasks.length?`<div class="task-list">${ownerTasks.map(t=>taskRow(t,personId,day,owner)).join('')}</div>`:'<div class="empty-category">В этом блоке пока нет задач</div>'}${addTaskButton(owner,category)}<div class="form-slot" data-form-slot="${owner}:${encodeURIComponent(category)}"></div></article>`;
       }
+      function renderAntiProcrastination(personId,day) {
+        const entries = state.procrastination?.[day]?.[personId] || [];
+        const hasEntry = entries.length > 0;
+        // A single anti-procrastination win is allowed per participant per calendar day.
+        // Older data with more than one entry is preserved and shown inline, never as a list.
+        const entryText = entries.map(entry => entry.text).filter(Boolean).join(' · ');
+        const earned = entries.reduce((sum, entry) => sum + (Number(entry.points) || 2), 0);
+        return `<section class="panel anti-card">
+          <h2>⏳ Анти-прокрастинация</h2>
+          ${hasEntry
+            ? `<p class="anti-result">Сегодня ты наконец сделала: <strong>${esc(entryText)}</strong>. Это ещё <strong>+${earned} балла</strong> к твоему прогрессу!</p><button type="button" class="anti-remove" data-action="remove-procrastination" data-person="${esc(personId)}" data-date="${day}">Убрать запись</button>`
+            : `<p class="anti-copy">Какое дело ты давно откладывала, но сегодня всё-таки сделала? Запиши одну маленькую победу и получи <strong>+2 балла</strong>.</p><form class="anti-form" data-procrastination-form data-person="${esc(personId)}" data-date="${day}"><input name="text" required maxlength="180" placeholder="Например: наконец разобрала рабочий стол" aria-label="Дело, которое ты давно откладывала"><button class="small-action" type="submit">Готово · +2 балла</button></form><div class="anti-hint">Одна запись в день — выбери самое важное дело 💛</div>`}
+        </section>`;
+      }
       function renderPersonTasks(personId,day) {
         const tasks=state.tasks[personId]||[];
         const groups=categoryGroups(tasks,personId);
@@ -561,6 +656,16 @@
         const groups=categoryGroups(tasks,'common');
         return `<section class="task-section"><div class="section-head"><div><h2>🤍 Общие задачи</h2><p>Этот список общий для всех; отметки и баллы учитываются отдельно для ${person.name}</p></div><button class="outline-action" type="button" data-action="add-category" data-owner="common">＋ Добавить блок</button></div>${groups.length?`<div class="task-grid">${groups.map(([category],i)=>taskCard(category,tasks,'common',person.id,day,i)).join('')}</div>`:'<div class="panel empty-state"><strong>Пока нет общих блоков</strong><br>Добавьте блок, чтобы создать общий список задач.</div>'}</section>`;
       }
+      function renderPeopleManager() {
+        const panel = document.getElementById('people-manager');
+        const button = document.getElementById('manage-people-button');
+        if (!panel || !button) return;
+        panel.hidden = !peopleManagerOpen;
+        button.setAttribute('aria-expanded', String(peopleManagerOpen));
+        if (!peopleManagerOpen) return;
+        const nextColor = palette[people.length % palette.length] || '#e873a0';
+        panel.innerHTML = `<h2>Управление участницами</h2><p>Можно изменить имя и цвет профиля или добавить новую участницу. Удаление участницы также удаляет её личные задачи и историю отметок.</p><div class="people-manager-list">${people.map(person=>`<form class="people-manager-row" data-member-form="${esc(person.id)}"><input type="text" name="name" maxlength="32" required value="${esc(person.name)}" aria-label="Имя участницы"><input type="color" name="color" value="${esc(person.color)}" aria-label="Цвет участницы"><button class="small-action" type="submit">Сохранить</button><button class="small-action secondary member-remove" type="button" data-action="remove-person" data-person="${esc(person.id)}">Удалить</button></form>`).join('')}</div><form class="people-add-form" data-add-person-form><input type="text" name="name" maxlength="32" required placeholder="Имя новой участницы"><input type="color" name="color" value="${nextColor}" aria-label="Цвет новой участницы"><button class="small-action" type="submit">＋ Добавить</button></form>`;
+      }
       function getRangeKeys(personId) {
         const now=fromKey(today), result=[];
         if(range==='7') { for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);result.push(dateKey(d));} }
@@ -569,31 +674,161 @@
         return result;
       }
       function getPersonPointsOn(personId,day) { return totals(personId,day).points; }
-      function analyticsPanel() {
-        const ids=[activeTab];
-        const keys=getRangeKeys(activeTab);
-        const points=keys.reduce((s,d)=>s+ids.reduce((x,id)=>x+getPersonPointsOn(id,d),0),0);
-        const done=keys.reduce((s,d)=>s+ids.reduce((x,id)=>x+totals(id,d).count,0),0);
-        const activeDays=new Set(keys.filter(d=>ids.some(id=>(state.completions[d]?.[id]||[]).length))).size;
-        const average=activeDays?Math.round(points/activeDays*10)/10:0;
-        const streak=activeTab==='all'?Math.max(...people.map(p=>streaks(p.id).current),0):streaks(activeTab).current;
-        const maxStreak=activeTab==='all'?Math.max(...people.map(p=>streaks(p.id).best),0):streaks(activeTab).best;
-        const chartKeys=keys.slice(-7);
-        const daily=chartKeys.map(d=>({d,p:ids.reduce((s,id)=>s+getPersonPointsOn(id,d),0)}));
-        const max=Math.max(1,...daily.map(x=>x.p));
-        const cats=new Map();
-        ids.forEach(id=>{for(const d of keys){const doneIds=state.completions[d]?.[id]||[];allTasksFor(id).filter(t=>doneIds.includes(t.id)).forEach(t=>cats.set(t.category,(cats.get(t.category)||0)+t.points));}});
-        const catRows=[...cats.entries()].sort((a,b)=>b[1]-a[1]); const maxCat=Math.max(1,...catRows.map(x=>x[1]));
-        const title=`Аналитика · ${selectedPerson().name}`;
-        return `<section class="section-head"><div><h2>${title}</h2><p>Показатели рассчитаны по общим и личным задачам этой участницы</p></div></section><div class="range-switch">${[['7','7 дней'],['month','Этот месяц'],['all','Всё время']].map(([id,label])=>`<button class="range-button ${range===id?'active':''}" data-range="${id}" type="button">${label}</button>`).join('')}</div><div class="metrics"><article class="panel metric"><strong>${points}</strong><span>баллов за период</span></article><article class="panel metric"><strong>${done}</strong><span>выполнено задач</span></article><article class="panel metric"><strong>${activeDays}</strong><span>активных дней</span></article><article class="panel metric"><strong>${streak} 🔥</strong><span>текущая серия · рекорд ${maxStreak}</span></article></div><div class="analytics-grid"><article class="panel chart-panel"><h3>📈 Баллы по дням</h3><p>Последние дни выбранного периода</p><div class="bars">${daily.map(x=>`<div class="bar-col" title="${esc(formatLong(x.d))}: ${x.p} баллов"><span class="bar-value">${x.p||''}</span><i class="bar" style="height:${Math.max(3,x.p/max*100)}%"></i><span class="bar-label">${fromKey(x.d).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})}</span></div>`).join('')}</div></article><article class="panel chart-panel"><h3>🍊 Баллы по категориям</h3><p>За выбранный период</p>${catRows.length?`<div class="category-list">${catRows.map(([name,value])=>`<div class="category-line"><span class="category-name">${esc(name)}</span><span class="category-track"><i class="category-fill" style="display:block;width:${value/maxCat*100}%"></i></span><span class="category-value">${value}</span></div>`).join('')}</div>`:'<div class="empty-state">Отметьте несколько задач — здесь появится аналитика ✨</div>'}</article></div>`;
+      function getAnalyticsDaily(personIds) {
+        const endDate = fromKey(today);
+        let startDate;
+        if (range === '7') {
+          startDate = new Date(endDate);
+          startDate.setDate(startDate.getDate() - 6);
+        } else if (range === 'month') {
+          startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+        } else {
+          const allRecordedDates = new Set([
+            ...Object.keys(state.completions || {}),
+            ...Object.keys(state.procrastination || {})
+          ]);
+          const validDates = [...allRecordedDates]
+            .filter(key => /^\d{4}-\d{2}-\d{2}$/.test(key))
+            .sort();
+          startDate = validDates.length ? fromKey(validDates[0]) : new Date(endDate);
+          if (!validDates.length) startDate.setDate(startDate.getDate() - 6);
+        }
+
+        // Include every calendar day, including days without activity (zero points).
+        const daily = [];
+        for (const cursor = new Date(startDate); cursor <= endDate; cursor.setDate(cursor.getDate() + 1)) {
+          const date = dateKey(cursor);
+          const points = personIds.reduce((sum, personId) => sum + totals(personId, date).points, 0);
+          const actions = personIds.reduce((sum, personId) => sum + totals(personId, date).count, 0);
+          daily.push({ date, points, actions });
+        }
+        return daily;
+      }
+
+      function renderLineChart(daily, heading, description, accent, ariaLabel) {
+        const totalPoints = daily.reduce((sum, day) => sum + day.points, 0);
+        const peak = Math.max(0, ...daily.map(day => day.points));
+        const maxY = Math.max(4, Math.ceil(peak / 4) * 4);
+        const width = 760, height = 300;
+        const left = 48, right = 18, top = 18, bottom = 48;
+        const plotWidth = width - left - right;
+        const plotHeight = height - top - bottom;
+        const baseY = top + plotHeight;
+        const points = daily.map((day, index) => ({
+          x: left + (daily.length <= 1 ? plotWidth / 2 : index * plotWidth / (daily.length - 1)),
+          y: baseY - (day.points / maxY) * plotHeight,
+          ...day
+        }));
+
+        // Use only straight L segments: no cubic/quadratic smoothing.
+        const linePath = points.length
+          ? points.map((point, index) => `${index ? 'L' : 'M'} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(' ')
+          : '';
+        const areaPath = points.length
+          ? `${linePath} L ${points[points.length - 1].x.toFixed(1)} ${baseY} L ${points[0].x.toFixed(1)} ${baseY} Z`
+          : '';
+
+        const grid = Array.from({ length: 5 }, (_, index) => {
+          const value = maxY - (maxY * index / 4);
+          const y = top + plotHeight * index / 4;
+          return `<g><line class="team-chart-grid" x1="${left}" y1="${y.toFixed(1)}" x2="${width-right}" y2="${y.toFixed(1)}"/><text x="${left-10}" y="${(y+4).toFixed(1)}" text-anchor="end">${Math.round(value)}</text></g>`;
+        }).join('');
+
+        const tickIndexes = [...new Set([
+          0,
+          Math.round((daily.length - 1) * .25),
+          Math.round((daily.length - 1) * .5),
+          Math.round((daily.length - 1) * .75),
+          daily.length - 1
+        ])].filter(index => index >= 0 && index < daily.length);
+        const xLabels = tickIndexes.map(index => {
+          const point = points[index];
+          const label = fromKey(point.date).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+          return `<text x="${point.x.toFixed(1)}" y="${height-15}" text-anchor="middle">${label}</text>`;
+        }).join('');
+        const dots = points.map(point =>
+          `<circle class="team-chart-point" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="3" style="stroke:${accent}"><title>${esc(formatLong(point.date))}: ${point.points} баллов · ${point.actions} действий</title></circle>`
+        ).join('');
+        const safeAccent = /^#[0-9a-f]{6}$/i.test(accent) ? accent : '#df4a83';
+
+        return `<article class="panel team-chart-card">
+          <div class="team-chart-heading"><div><h3>${esc(heading)}</h3><p>${esc(description)}</p></div><div class="team-chart-total">${totalPoints} баллов за период</div></div>
+          ${points.length ? `<div class="team-chart-wrap"><svg class="team-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(ariaLabel)}">${grid}<defs><linearGradient id="analyticsLineFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${safeAccent}" stop-opacity=".20"/><stop offset="100%" stop-color="${safeAccent}" stop-opacity=".015"/></linearGradient></defs><path d="${areaPath}" fill="url(#analyticsLineFill)"/><path class="team-chart-line" d="${linePath}" style="stroke:${safeAccent}"/>${dots}${xLabels}</svg></div>` : '<div class="team-chart-empty">Пока нет данных для графика. Отметьте первые задачи — здесь появится динамика.</div>'}
+        </article>`;
+      }
+
+      function renderPersonalAnalytics() {
+        const person = selectedPerson();
+        const daily = getAnalyticsDaily([person.id]);
+        const totalPoints = daily.reduce((sum, day) => sum + day.points, 0);
+        const totalActions = daily.reduce((sum, day) => sum + day.actions, 0);
+        const activeDaily = daily.filter(day => day.actions > 0);
+        const activeDays = activeDaily.length;
+        const antiWins = daily.reduce((sum, day) => sum + (state.procrastination?.[day.date]?.[person.id] || []).length, 0);
+        const streak = streaks(person.id);
+        const average = activeDays ? Math.round(totalPoints / activeDays * 10) / 10 : 0;
+        const bestDay = daily.reduce((best, day) => day.points > (best?.points ?? -1) ? day : best, null);
+
+        // Breakdown of earned points by task category, including anti-procrastination entries.
+        const categoryTotals = new Map();
+        for (const day of daily) {
+          const dayTotals = totals(person.id, day.date);
+          for (const task of dayTotals.doneTasks) {
+            categoryTotals.set(task.category, (categoryTotals.get(task.category) || 0) + (Number(task.points) || 0));
+          }
+          const antiPoints = (dayTotals.antiEntries || []).reduce((sum, entry) => sum + (Number(entry.points) || 2), 0);
+          if (antiPoints) categoryTotals.set('⏳ Анти-прокрастинация', (categoryTotals.get('⏳ Анти-прокрастинация') || 0) + antiPoints);
+        }
+        const categoryRows = [...categoryTotals.entries()].sort((a,b) => b[1]-a[1]);
+        const maxCategory = Math.max(1, ...categoryRows.map(([,value]) => value));
+        const categoryMarkup = categoryRows.length
+          ? `<div class="category-list">${categoryRows.map(([name,value]) => `<div class="category-line"><span class="category-name">${esc(name)}</span><span class="category-track"><i class="category-fill" style="display:block;width:${value/maxCategory*100}%"></i></span><span class="category-value">${value}</span></div>`).join('')}</div>`
+          : '<div class="empty-state">В выбранном периоде пока нет выполненных задач.</div>';
+
+        const recentDays = activeDaily.slice(-10).reverse();
+        const dayLog = recentDays.length
+          ? `<div class="day-log">${recentDays.map(day => `<div class="log-row"><span>${esc(formatLong(day.date))}</span><span>${day.points} баллов · ${day.actions} действий</span></div>`).join('')}</div>`
+          : '<div class="empty-state">Отметь первую задачу — здесь появится история активности.</div>';
+
+        return `<section class="section-head"><div><h2>👤 Личная аналитика · ${esc(person.name)}</h2><p>Подробная динамика, активность и вклад категорий выбранной участницы</p></div></section>
+          <div class="range-switch">${[['7','7 дней'],['month','Этот месяц'],['all','Всё время']].map(([id,label])=>`<button class="range-button ${range===id?'active':''}" data-range="${id}" type="button">${label}</button>`).join('')}</div>
+          <div class="metrics personal-metrics">
+            <article class="panel metric"><strong style="color:${esc(person.color)}">${totalPoints}</strong><span>всего баллов</span></article>
+            <article class="panel metric"><strong style="color:${esc(person.color)}">${totalActions}</strong><span>выполнено действий</span></article>
+            <article class="panel metric"><strong style="color:${esc(person.color)}">${activeDays}</strong><span>активных дней</span></article>
+            <article class="panel metric"><strong style="color:${esc(person.color)}">${average}</strong><span>баллов в активный день</span></article>
+            <article class="panel metric"><strong style="color:${esc(person.color)}">${streak.current} 🔥</strong><span>текущая серия · рекорд ${streak.best}</span></article>
+            <article class="panel metric"><strong style="color:${esc(person.color)}">${bestDay && bestDay.points > 0 ? bestDay.points : 0}</strong><span>лучший день${bestDay && bestDay.points > 0 ? ` · ${fromKey(bestDay.date).toLocaleDateString('ru-RU',{day:'numeric',month:'short'})}` : ''}</span></article>
+          </div>
+          ${renderLineChart(daily, `Динамика · ${person.name}`, 'Баллы за каждый календарный день', person.color, `Личная динамика ${person.name} по дням`)}
+          <div class="analytics-grid" style="margin-top:14px">
+            <article class="panel chart-panel"><h3>🏷️ Баллы по категориям</h3><p>Какие направления дали больше всего баллов за период</p>${categoryMarkup}</article>
+            <article class="panel chart-panel"><h3>📅 История активности</h3><p>Последние активные дни выбранного периода</p>${dayLog}</article>
+          </div>
+          <p class="analytics-footnote">Анти-прокрастинация: ${antiWins} небольших побед · ${antiWins * 2} баллов за выбранный период.</p>`;
+      }
+
+      function renderTeamAnalytics() {
+        const personIds = people.map(person => person.id);
+        const daily = getAnalyticsDaily(personIds);
+        const totalPoints = daily.reduce((sum, day) => sum + day.points, 0);
+        const activeDays = daily.filter(day => day.actions > 0).length;
+        const antiWins = daily.reduce((sum, day) => sum + personIds.reduce((count, personId) =>
+          count + (state.procrastination?.[day.date]?.[personId] || []).length, 0), 0);
+
+        return `<section class="section-head"><div><h2>👥 Общая аналитика команды</h2><p>Суммарный прогресс всех ${people.length} участниц</p></div></section>
+          <div class="range-switch">${[['7','7 дней'],['month','Этот месяц'],['all','Всё время']].map(([id,label])=>`<button class="range-button ${range===id?'active':''}" data-range="${id}" type="button">${label}</button>`).join('')}</div>
+          ${renderLineChart(daily, 'Динамика команды', 'Сумма баллов всех участниц за каждый календарный день', '#df4a83', `График суммарных баллов всех ${people.length} участниц по дням`)}
+          <p class="analytics-footnote">За период команда набрала ${totalPoints} баллов и была активна ${activeDays} дней. Анти-прокрастинация: ${antiWins} небольших побед · по 2 балла за каждую.</p>`;
       }
       function render() {
-        renderHero(); renderTabs();
+        renderHero(); renderTabs(); renderPeopleManager();
         document.querySelectorAll('.mode-tab').forEach(b=>b.classList.toggle('active',b.dataset.mode===activeMode));
         const main=document.getElementById('main-content');
-        if(activeMode==='progress') { main.innerHTML=analyticsPanel(); return; }
+        if(activeMode==='personal-progress') { main.innerHTML=renderPersonalAnalytics(); return; }
+        if(activeMode==='team-progress') { main.innerHTML=renderTeamAnalytics(); return; }
         let body=renderSummary();
-        body+=renderCommonTasks(selectedDate)+renderPersonTasks(activeTab,selectedDate)+renderCalendar();
+        body+=renderCommonTasks(selectedDate)+renderAntiProcrastination(activeTab,selectedDate)+renderPersonTasks(activeTab,selectedDate)+renderCalendar();
         main.innerHTML=body;
       }
       function showAddForm(owner,category) {
@@ -606,6 +841,7 @@
         slot.querySelector('input[name=title]')?.focus();
       }
       document.addEventListener('click',e=>{
+        if(e.target.closest('#manage-people-button')) { peopleManagerOpen=!peopleManagerOpen; renderPeopleManager(); return; }
         const tab=e.target.closest('[data-tab]');
         if(tab){activeTab=tab.dataset.tab;render();return;}
         const mode=e.target.closest('[data-mode]');
@@ -619,6 +855,29 @@
         if(action.dataset.action==='today'){selectedDate=today;calendarMonth=new Date(fromKey(today).getFullYear(),fromKey(today).getMonth(),1);render();return;}
         if(action.dataset.action==='prev-month'){calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()-1,1);render();return;}
         if(action.dataset.action==='next-month'){calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,1);render();return;}
+        if(action.dataset.action==='remove-procrastination'){
+          const personId=action.dataset.person, date=action.dataset.date;
+          const entries=state.procrastination?.[date]?.[personId]||[];
+          if(!entries.length) return;
+          const points=entries.reduce((sum,entry)=>sum+(Number(entry.points)||2),0);
+          if(!window.confirm(`Убрать эту победу и снять ${points} балла${points===2?'':'ов'}?`)) return;
+          delete state.procrastination[date][personId];
+          if(!Object.keys(state.procrastination[date]).length) delete state.procrastination[date];
+          save();render();return;
+        }
+        if(action.dataset.action==='remove-person'){
+          const personId=action.dataset.person;
+          const person=people.find(item=>item.id===personId);
+          if(!person) return;
+          if(people.length<=1){window.alert('В трекере должна остаться хотя бы одна участница.');return;}
+          if(!window.confirm(`Удалить участницу «${person.name}»? Её личные задачи, отметки и записи анти-прокрастинации будут удалены без возможности восстановления.`)) return;
+          people=people.filter(item=>item.id!==personId); tabs=people; state.people=people;
+          delete state.tasks[personId]; delete state.categories[personId];
+          for(const date of Object.keys(state.completions)){ if(state.completions[date]) delete state.completions[date][personId]; if(!Object.keys(state.completions[date]||{}).length) delete state.completions[date]; }
+          for(const date of Object.keys(state.procrastination)){ if(state.procrastination[date]) delete state.procrastination[date][personId]; if(!Object.keys(state.procrastination[date]||{}).length) delete state.procrastination[date]; }
+          if(activeTab===personId) activeTab=people[0].id;
+          save();render();return;
+        }
         if(action.dataset.action==='add-category'){
           const owner=action.dataset.owner;
           const name=window.prompt('Название нового блока задач:');
@@ -666,6 +925,37 @@
         if(e.target.matches('input[type=checkbox][data-task]')){toggleTask(e.target.dataset.date,e.target.dataset.person,e.target.dataset.task);}
       });
       document.addEventListener('submit',e=>{
+        const memberForm=e.target.closest('[data-member-form]');
+        if(memberForm){
+          e.preventDefault();
+          const person=people.find(item=>item.id===memberForm.dataset.memberForm);
+          const fd=new FormData(memberForm), name=String(fd.get('name')||'').trim(), color=String(fd.get('color')||'');
+          if(!person||!name) return;
+          person.name=name; person.avatar=Array.from(name)[0]||'•'; person.color=/^#[0-9a-f]{6}$/i.test(color)?color:person.color;
+          state.people=people; save(); render(); return;
+        }
+        const addPersonForm=e.target.closest('[data-add-person-form]');
+        if(addPersonForm){
+          e.preventDefault();
+          const fd=new FormData(addPersonForm), name=String(fd.get('name')||'').trim(), color=String(fd.get('color')||palette[people.length%palette.length]||'#e873a0');
+          if(!name) return;
+          const id=`member-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6)}`;
+          const person={id,name,avatar:Array.from(name)[0]||'•',color:/^#[0-9a-f]{6}$/i.test(color)?color:'#e873a0'};
+          people.push(person); tabs=people; state.people=people; state.tasks[id]=[]; state.categories[id]=[];
+          activeTab=id; save(); render(); return;
+        }
+        const antiForm=e.target.closest('[data-procrastination-form]');
+        if(antiForm){
+          e.preventDefault();
+          const fd=new FormData(antiForm), textValue=String(fd.get('text')||'').trim();
+          const personId=antiForm.dataset.person, day=antiForm.dataset.date;
+          if(!textValue||!people.some(person=>person.id===personId)||day>today) return;
+          if(!state.procrastination[day]) state.procrastination[day]={};
+          if(!Array.isArray(state.procrastination[day][personId])) state.procrastination[day][personId]=[];
+          if(state.procrastination[day][personId].length){window.alert('На этот день уже записана одна победа. Можно убрать её и добавить другую.');return;}
+          state.procrastination[day][personId].push({id:`anti-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6)}`,text:textValue,points:2});
+          save(); render(); return;
+        }
         const form=e.target.closest('[data-add-form]'); if(!form)return; e.preventDefault();
         const fd=new FormData(form), title=String(fd.get('title')||'').trim(), points=Math.min(50,Math.max(1,Number(fd.get('points'))||1));
         if(!title)return;
